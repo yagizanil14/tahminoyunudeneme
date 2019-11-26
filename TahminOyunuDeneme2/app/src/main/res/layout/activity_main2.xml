@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Main2Activity">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_marginTop="100dp"
+        android:text="SORULAR"
+        tools:layout_editor_absoluteX="206dp"
+        tools:layout_editor_absoluteY="267dp" />
+
+    <EditText
+        android:layout_marginTop="50dp"
+        android:id="@+id/Cevap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="number"
+        android:text="Cevabı Giriniz" />
+
+    <Button
+        android:id="@+id/Cevabı_Gonder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Gönder" />
+
+    <Button
+        android:id="@+id/anasayfa"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Ana Sayfaya Git" />
+
+
+</LinearLayout>

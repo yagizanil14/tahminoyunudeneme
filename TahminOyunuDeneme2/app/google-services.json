@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "802551357781",
+    "firebase_url": "https://tahminoyunudeneme2.firebaseio.com",
+    "project_id": "tahminoyunudeneme2",
+    "storage_bucket": "tahminoyunudeneme2.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:802551357781:android:866ca6beefd2dbd1f88fdc",
+        "android_client_info": {
+          "package_name": "com.example.tahminoyunudeneme2"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "802551357781-8ci2e4pah5feuclm0vuv1d7l6cecnpjq.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.tahminoyunudeneme2",
+            "certificate_hash": "e235b60edd9c2e942c4d9a3f5b536570b1da5b19"
+          }
+        },
+        {
+          "client_id": "802551357781-6kmj3p1a3j69kfm9h7lqaalhisu5unma.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAPHUPeW-N8zZr91xwHASm1l1v0jeqKcyc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "802551357781-6kmj3p1a3j69kfm9h7lqaalhisu5unma.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
