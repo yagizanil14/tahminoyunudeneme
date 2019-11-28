@@ -9,7 +9,7 @@
     tools:context=".Main2Activity">
 
     <TextView
-        android:id="@+id/textView"
+        android:id="@+id/SoruMetni"
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:layout_marginTop="100dp"
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:inputType="number"
-        android:text="Cevabı Giriniz" />
+        android:hint="Cevabı Giriniz" />
 
     <Button
         android:id="@+id/Cevabı_Gonder"

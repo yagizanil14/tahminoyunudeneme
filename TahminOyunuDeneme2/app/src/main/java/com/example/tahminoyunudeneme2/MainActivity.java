@@ -40,48 +40,30 @@ public class MainActivity extends AppCompatActivity {
     Button OyunaBasla;
     FirebaseDatabase database;
     DatabaseReference databaseReference;
-    Oda oda;
-    OnlineKullanici onlineKullanici;
-    ArrayList<String> odaKullanicilari;
-    ArrayList<String> kullanicilar;
+    DatabaseReference dbsorular;
+    Kullanicilar kullanicilar;
+    private ArrayList<String> odakullanicilari;
+    Odalar odalar;
+    private ArrayList<String> sorularList;
+    private ArrayList<Sorular> sorular;
 
 
-    ArrayList<Soru> sorular;
-
-    private List<OnlineKullanici> list_Online=new ArrayList<>(  );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate( savedInstanceState );
         setContentView( R.layout.activity_main );
 
+        //FİREBASE
         database = FirebaseDatabase.getInstance();
         databaseReference = database.getReference();
-
-
+        dbsorular = database.getReference("Sorular");
         FirebaseApp.initializeApp( this );
+
+
 
         btn_sign_out = findViewById( R.id.btn_sign_out );
         OyunaBasla = (Button)findViewById( R.id.OyunaBasla );
-
-        databaseReference.child( "Kullanıcılar" ).addValueEventListener( new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                if (list_Online.size()>0)
-                    list_Online.clear();
-
-                for (DataSnapshot postSnapShot:dataSnapshot.getChildren()){
-                    OnlineKullanici online = postSnapShot.getValue(OnlineKullanici.class);
-                    list_Online.add( online );
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
-
-            }
-        } );
 
         btn_sign_out.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -112,14 +94,6 @@ public class MainActivity extends AppCompatActivity {
         showSignInOptions();
     }
 
-    private void kullaniciEkle() {
-         onlineKullanici = new OnlineKullanici( UUID.randomUUID().toString(),OyunaBasla.getText().toString());
-
-        //Veri Tabanına Gönderme
-
-        databaseReference.child( "Kullanıcılar" ).child( onlineKullanici.getUid() ).setValue( onlineKullanici );
-
-    }
 
     private void showSignInOptions() {
         startActivityForResult( AuthUI.getInstance(  ).createSignInIntentBuilder()
@@ -146,140 +120,98 @@ public class MainActivity extends AppCompatActivity {
                 OyunaBasla.setOnClickListener( new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        kullaniciEkle();
-                        OyunaBasla();
 
-                            Intent anasayfagec = new Intent( MainActivity.this, Main2Activity.class );
-                            startActivity( anasayfagec );
+                        //QUERY İLE ODALARIN İÇİNDE MÜSAİTMİ DEĞERİ TRUE OLANI ARA
+                        //YOKSA OYUNA BAŞLA METOTUNU KULLAN
+                        //VARSA ODAYIDOLDUR METOTUNU KULLAN
+                        odalar = null;
+                        kullanicilar = new Kullanicilar( UUID.randomUUID().toString() );
+                        odakullanicilari = new ArrayList<String>();
+                        odakullanicilari.add( kullanicilar.getUid());
 
+
+                        // Query ile musiatmi değeri true olan oda arayıp ilk sonucu vericek.
+                        Query query = databaseReference.child("Odalar").orderByChild("musaitmi").equalTo( true );
+                        query.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                for (DataSnapshot odaSnapshot: dataSnapshot.getChildren()) {
+                                    // Odada kendi kullanıcım olmasın
+
+                                    for(DataSnapshot kullanici : odaSnapshot.child("kullanicilar").getChildren()){
+                                        odakullanicilari.add(kullanici.getValue( String.class ));
+                                    }
+                                    if(odakullanicilari.contains( kullanicilar.getUid() )){
+                                        odalar = odaSnapshot.getValue( Odalar.class );
+                                    }
+                                }
+
+                                if( odalar != null  ){
+                                    odalar.setMusaitmi( false );
+                                    odalar.getKullaniciuid().add( kullanicilar.getUid() );
+                                    databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
+                                    Intent anasayfagec = new Intent( MainActivity.this, Main2Activity.class );
+                                    startActivity( anasayfagec );
+                                    //FİREBASEDEN SORULARI ALIP DEVAM ETMESİ LAZIM
+
+                                } else {
+                                   oyunabasla();
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+                                // Getting Post failed, log a message
+                                Log.w("Hata", "loadPost:onCancelled", databaseError.toException());
+                                // ...
+                            }
+                        });
                     }
                 } );
-
-            }
-            else {
+            } else {
                 Toast.makeText( this, ""+response.getError().getMessage(), Toast.LENGTH_SHORT ).show();
             }
         }
     }
 
-    private void musaitOdaBul(){
-        oda = null;
-        // Query ile musiatmi değeri true olan oda arayıp ilk sonucu vericek.
-        Query query = databaseReference.child("Odalar").orderByChild("musaitmi").equalTo( true );
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                for (DataSnapshot odaSnapshot: dataSnapshot.getChildren()) {
-                    // Odada kendi kullanıcım olmasın
-                     odaKullanicilari = new ArrayList<String>();
-                    for(DataSnapshot kullanici : odaSnapshot.child("kullanicilar").getChildren()){
-                        odaKullanicilari.add(kullanici.getValue( String.class ));
-                    }
-                    if(odaKullanicilari.contains( onlineKullanici.getUid() )){
-                        oda = odaSnapshot.getValue( Oda.class );
-                    }
-                }
+    private void oyunabasla() {
+        kullanicilar = new Kullanicilar( UUID.randomUUID().toString() );
+        sorularList = new ArrayList<String>();
 
-                if( oda != null  ){
-
-                    odayiDoldur();
-                } else {
-                    sorulariGuncelle();
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w("Hata", "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        });
-
-    };
-
-    private void odaYarat(){
-        // Firebase'den soruları alıp, yeni bir oda instance'ı yaratacak
-
-        oda = new Oda( UUID.randomUUID().toString());
-        oda.setSorular( sorular );
-        oda.setMusaitmi( true );
-
-        kullanicilar = new ArrayList<String>();
-        kullanicilar.add( onlineKullanici.getUid() );//(Fazladan uid ekliyor)
-        oda.setKullanicilar( kullanicilar );
-
-
-        // Firebase'e odayı kaydedecek
-        databaseReference.child( "Odalar" ).child( oda.getOdauid() ).setValue( oda );
-
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                if(!dataSnapshot.child( "musaitmi" ).getValue(Boolean.class)){
-                    odayaGir( oda );
-                }
-                // ...
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w("Hata", "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        };
-        databaseReference.child( "Odalar" ).child( oda.getOdauid() ).addValueEventListener(postListener);
-    };
-
-    private List<Soru> rastgeleSoruGetir(){
-        // Rastgele Soru Seçip Getirecek (Şu An Boş)
-        return null;
-    }
-
-
-    private void odayiDoldur(){
-            oda.setMusaitmi( false );
-            oda.getKullanicilar().add( onlineKullanici.getUid() );
-            databaseReference.child( "Odalar" ).child( oda.getOdauid() ).setValue( oda );
-            odayaGir( oda );
-    }
-
-    private void odayaGir(Oda oda){
-        // FireBaseden Soruları Alıp Devam Edecek (Şu An Boş Doldur)
-        Log.v("ODAYA GIR", oda.getOdauid());
-
-    };
-
-    private void sorulariGuncelle(){
-
-        sorular = new ArrayList<Soru>();
+        //DB'DEN SORULARI AL;
+        sorular = new ArrayList<Sorular>();
         databaseReference.child( "Sorular" ).addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // This method is called once with the initial value and again
                 // whenever data at this location is updated.
                 for (DataSnapshot soruSnapshot: dataSnapshot.getChildren()) {
-                    Soru soru = soruSnapshot.getValue(Soru.class);
-                    Log.v("Soru", soru.getSoruMetni());
-                    Log.v("Cevap", soru.getCevap().toString());
+                    Sorular soru = soruSnapshot.getValue(Sorular.class);
                     sorular.add( soru );
                 }
 
+                //Yeni Oda Yarat
+                odalar = new Odalar( UUID.randomUUID().toString(),true,odakullanicilari,sorularList);
 
+                odakullanicilari = new ArrayList<String>();
+                odakullanicilari.add( kullanicilar.getUid());
+                odalar.setKullaniciuid( odakullanicilari );
+
+                //SORULARI DB DEN ALIP ODANIN İÇİNE ATMASI LAZIM AMA ÇALIŞMIYOR*******************************************************************************************
+                odalar.setOdadakisorular( sorularList );
+
+                databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
             }
 
             @Override
-            public void onCancelled(DatabaseError error) {
+            public void onCancelled(@NonNull DatabaseError databaseError) {
 
             }
-        });
-        odaYarat();
-    };
-
-    private void OyunaBasla(){
-        musaitOdaBul();
+        } );
 
     }
+
+
+
+
 }
