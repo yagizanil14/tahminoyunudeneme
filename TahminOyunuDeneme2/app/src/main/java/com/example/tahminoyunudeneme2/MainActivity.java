@@ -140,22 +140,20 @@ public class MainActivity extends AppCompatActivity {
 
                                     for(DataSnapshot kullanici : odaSnapshot.child("kullanicilar").getChildren()){
                                         odakullanicilari.add(kullanici.getValue( String.class ));
-                                    }
-                                    if(odakullanicilari.contains( kullanicilar.getUid() )){
-                                        odalar = odaSnapshot.getValue( Odalar.class );
-                                    }
-                                }
+                                        if(odakullanicilari.contains( kullanicilar.getUid() )){
+                                            if( odalar != null  ){
+                                                odalar.setMusaitmi( false );
+                                                odalar.getKullaniciuid().add( kullanicilar.getUid() );
+                                                databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
+                                                Intent anasayfagec = new Intent( MainActivity.this, Main2Activity.class );
+                                                startActivity( anasayfagec );
+                                                //FİREBASEDEN SORULARI ALIP DEVAM ETMESİ LAZIM
 
-                                if( odalar != null  ){
-                                    odalar.setMusaitmi( false );
-                                    odalar.getKullaniciuid().add( kullanicilar.getUid() );
-                                    databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
-                                    Intent anasayfagec = new Intent( MainActivity.this, Main2Activity.class );
-                                    startActivity( anasayfagec );
-                                    //FİREBASEDEN SORULARI ALIP DEVAM ETMESİ LAZIM
-
-                                } else {
-                                   oyunabasla();
+                                            } else {
+                                                oyunabasla();
+                                            }
+                                        }
+                                    }
                                 }
                             }
 
