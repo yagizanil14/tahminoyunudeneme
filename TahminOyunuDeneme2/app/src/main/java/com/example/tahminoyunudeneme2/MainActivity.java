@@ -46,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     Odalar odalar;
     private ArrayList<String> sorularList;
     private ArrayList<Sorular> sorular;
+    String gelenKullaniciID;
 
 
 
@@ -60,7 +61,8 @@ public class MainActivity extends AppCompatActivity {
         dbsorular = database.getReference("Sorular");
         FirebaseApp.initializeApp( this );
 
-
+        odakullanicilari = new ArrayList<String>();
+        kullanicilar = new Kullanicilar( UUID.randomUUID().toString() );
 
         btn_sign_out = findViewById( R.id.btn_sign_out );
         OyunaBasla = (Button)findViewById( R.id.OyunaBasla );
@@ -125,45 +127,50 @@ public class MainActivity extends AppCompatActivity {
                         //YOKSA OYUNA BAŞLA METOTUNU KULLAN
                         //VARSA ODAYIDOLDUR METOTUNU KULLAN
                         odalar = null;
-                        kullanicilar = new Kullanicilar( UUID.randomUUID().toString() );
-                        odakullanicilari = new ArrayList<String>();
-                        odakullanicilari.add( kullanicilar.getUid());
-
-
                         // Query ile musiatmi değeri true olan oda arayıp ilk sonucu vericek.
                         Query query = databaseReference.child("Odalar").orderByChild("musaitmi").equalTo( true );
-                        query.addValueEventListener(new ValueEventListener() {
+                        query.addListenerForSingleValueEvent( new ValueEventListener() {
                             @Override
-                            public void onDataChange(DataSnapshot dataSnapshot) {
-                                for (DataSnapshot odaSnapshot: dataSnapshot.getChildren()) {
-                                    // Odada kendi kullanıcım olmasın
+                            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                                if(dataSnapshot.getChildrenCount()!=0) { // Dedik ki sonuç sıfırdan fazla yani müsait oda var
+                                    for (DataSnapshot odaSnapshot: dataSnapshot.getChildren()) {
 
-                                    for(DataSnapshot kullanici : odaSnapshot.child("kullanicilar").getChildren()){
-                                        odakullanicilari.add(kullanici.getValue( String.class ));
-                                        if(odakullanicilari.contains( kullanicilar.getUid() )){
-                                            if( odalar != null  ){
-                                                odalar.setMusaitmi( false );
-                                                odalar.getKullaniciuid().add( kullanicilar.getUid() );
-                                                databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
-                                                Intent anasayfagec = new Intent( MainActivity.this, Main2Activity.class );
-                                                startActivity( anasayfagec );
-                                                //FİREBASEDEN SORULARI ALIP DEVAM ETMESİ LAZIM
+                                        for(DataSnapshot kullanici : odaSnapshot.child("kullaniciuid").getChildren()){ // burası kullanıcı uuidsine bakıyor odaların içinde altındaki if bloğuda içerde kullanıcı varsa
+                                             odakullanicilari.add(kullanici.getValue( String.class )); // Burda tekrar neden listeye ekledin?
+                                            // if loğuna göndermek için eklemiştim şöyle desen ifi for içinde kontrol etsen? olabilir : )
 
-                                            } else {
-                                                oyunabasla();
+                                            //gelenKullaniciID = kullanici.getValue(String.class);
+
+                                            String gelenKullaniciID = kullanici.getValue(String.class);
+
+                                            if(odakullanicilari.contains(gelenKullaniciID)){ // varsa ne yapacaktı
+                                                odalar = odaSnapshot.getValue( Odalar.class ); // Bunu kapatınca okuyabiliyor mu odaları? sanırım okuyamaz :D
+                                                //Şurda if kontrolü yapalım patlamasın
+                                                if(odalar!=null){
+                                                    odalar.setMusaitmi( false );
+                                                    odalar.getKullaniciuid().add( kullanicilar.getUid() );
+                                                    odakullanicilari.add( kullanicilar.getUid());
+                                                    databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
+                                                    Intent anasayfagec = new Intent( MainActivity.this, Main2Activity.class );
+                                                    startActivity( anasayfagec );
+                                                }else{
+                                                    oyunabasla();
+                                                }
                                             }
                                         }
+
+
                                     }
+                                }else{
+                                    oyunabasla();
                                 }
                             }
 
                             @Override
-                            public void onCancelled(DatabaseError databaseError) {
-                                // Getting Post failed, log a message
-                                Log.w("Hata", "loadPost:onCancelled", databaseError.toException());
-                                // ...
+                            public void onCancelled(@NonNull DatabaseError databaseError) {
+
                             }
-                        });
+                        } );
                     }
                 } );
             } else {
@@ -172,8 +179,10 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void oyunabasla() {
-        kullanicilar = new Kullanicilar( UUID.randomUUID().toString() );
+    private void oyunabasla() { // buradada oda açıyor ve ilk kullanıcı olarak kendisini ekliyor bu alan oda açma alanı değil mi evet oda açıyor soruları db den alıp odaya ekliyor kullanıcıları vs ekliyor
+        // Bu ssorular ne alaka?
+        // db de bizim hazırladığımız sorular olacak daha sonra db den random şekilde 10 adet soruyu alıp odaların içine atması lazımki aynı anda aynı soruyu 2 farklı kullanıcıya gösterebilelim
+
         sorularList = new ArrayList<String>();
 
         //DB'DEN SORULARI AL;
@@ -198,8 +207,13 @@ public class MainActivity extends AppCompatActivity {
                 //SORULARI DB DEN ALIP ODANIN İÇİNE ATMASI LAZIM AMA ÇALIŞMIYOR*******************************************************************************************
                 odalar.setOdadakisorular( sorularList );
 
+                Log.e("Oda Açılıyor","----");
                 databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
-            }
+            }// bu arada classları yanlış açmış olabilirim burası çalışmıyor
+
+            // Hiç bir şey değişmedi mi yoksa derleyemedik mi?
+            // tekrar deneyelim sanırım değişmedi ama bişey deneyebilirmiyim tabi
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError databaseError) {
