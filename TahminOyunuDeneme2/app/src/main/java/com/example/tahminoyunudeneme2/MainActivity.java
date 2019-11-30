@@ -30,6 +30,7 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
@@ -45,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> odakullanicilari;
     Odalar odalar;
     private ArrayList<String> sorularList;
-    private ArrayList<Sorular> sorular;
-    String gelenKullaniciID;
+
+
 
 
 
@@ -134,18 +135,14 @@ public class MainActivity extends AppCompatActivity {
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if(dataSnapshot.getChildrenCount()!=0) { // Dedik ki sonuç sıfırdan fazla yani müsait oda var
                                     for (DataSnapshot odaSnapshot: dataSnapshot.getChildren()) {
-
                                         for(DataSnapshot kullanici : odaSnapshot.child("kullaniciuid").getChildren()){ // burası kullanıcı uuidsine bakıyor odaların içinde altındaki if bloğuda içerde kullanıcı varsa
-                                             odakullanicilari.add(kullanici.getValue( String.class )); // Burda tekrar neden listeye ekledin?
-                                            // if loğuna göndermek için eklemiştim şöyle desen ifi for içinde kontrol etsen? olabilir : )
-
+                                             odakullanicilari.add(kullanici.getValue( String.class ));
                                             //gelenKullaniciID = kullanici.getValue(String.class);
 
                                             String gelenKullaniciID = kullanici.getValue(String.class);
 
-                                            if(odakullanicilari.contains(gelenKullaniciID)){ // varsa ne yapacaktı
-                                                odalar = odaSnapshot.getValue( Odalar.class ); // Bunu kapatınca okuyabiliyor mu odaları? sanırım okuyamaz :D
-                                                //Şurda if kontrolü yapalım patlamasın
+                                            if(odakullanicilari.contains(gelenKullaniciID)){
+                                                odalar = odaSnapshot.getValue( Odalar.class );
                                                 if(odalar!=null){
                                                     odalar.setMusaitmi( false );
                                                     odalar.getKullaniciuid().add( kullanicilar.getUid() );
@@ -158,8 +155,6 @@ public class MainActivity extends AppCompatActivity {
                                                 }
                                             }
                                         }
-
-
                                     }
                                 }else{
                                     oyunabasla();
@@ -179,40 +174,32 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void oyunabasla() { // buradada oda açıyor ve ilk kullanıcı olarak kendisini ekliyor bu alan oda açma alanı değil mi evet oda açıyor soruları db den alıp odaya ekliyor kullanıcıları vs ekliyor
-        // Bu ssorular ne alaka?
-        // db de bizim hazırladığımız sorular olacak daha sonra db den random şekilde 10 adet soruyu alıp odaların içine atması lazımki aynı anda aynı soruyu 2 farklı kullanıcıya gösterebilelim
+    private void oyunabasla() {
 
         sorularList = new ArrayList<String>();
+        //Yeni Oda Yarat
 
+        odalar = new Odalar( UUID.randomUUID().toString(),true,odakullanicilari,sorularList);
+
+        odakullanicilari = new ArrayList<String>();
+        odakullanicilari.add( kullanicilar.getUid());
+        odalar.setKullaniciuid( odakullanicilari );
         //DB'DEN SORULARI AL;
-        sorular = new ArrayList<Sorular>();
-        databaseReference.child( "Sorular" ).addValueEventListener( new ValueEventListener() {
+        databaseReference.child( "Sorular" ).addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                // This method is called once with the initial value and again
-                // whenever data at this location is updated.
+
                 for (DataSnapshot soruSnapshot: dataSnapshot.getChildren()) {
-                    Sorular soru = soruSnapshot.getValue(Sorular.class);
-                    sorular.add( soru );
+                    sorularList.add( Objects.requireNonNull( soruSnapshot.getValue() ).toString() );
+                    Log.e( "sorular alınıyor","+++++"+soruSnapshot );
                 }
-
-                //Yeni Oda Yarat
-                odalar = new Odalar( UUID.randomUUID().toString(),true,odakullanicilari,sorularList);
-
-                odakullanicilari = new ArrayList<String>();
-                odakullanicilari.add( kullanicilar.getUid());
-                odalar.setKullaniciuid( odakullanicilari );
 
                 //SORULARI DB DEN ALIP ODANIN İÇİNE ATMASI LAZIM AMA ÇALIŞMIYOR*******************************************************************************************
                 odalar.setOdadakisorular( sorularList );
 
                 Log.e("Oda Açılıyor","----");
                 databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
-            }// bu arada classları yanlış açmış olabilirim burası çalışmıyor
-
-            // Hiç bir şey değişmedi mi yoksa derleyemedik mi?
-            // tekrar deneyelim sanırım değişmedi ama bişey deneyebilirmiyim tabi
+            }
 
 
             @Override

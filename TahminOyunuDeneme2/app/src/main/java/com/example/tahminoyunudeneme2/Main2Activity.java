@@ -1,6 +1,5 @@
 package com.example.tahminoyunudeneme2;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,18 +7,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.google.firebase.FirebaseApp;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.UUID;
 
 public class Main2Activity extends AppCompatActivity {
 
@@ -29,9 +24,8 @@ public class Main2Activity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference databaseReference;
     Odalar odalar;
-    Cevaplar cevaplar1;
+    ArrayList<String> cevaplar1;
     Kullanicilar kullanicilar;
-    private ArrayList<String> cevaplar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,7 +42,8 @@ public class Main2Activity extends AppCompatActivity {
         Cevabi_Gonder = (Button)findViewById( R.id.Cevabı_Gonder );
         Anasayfaya_git = (Button)findViewById( R.id.anasayfa );
 
-        cevaplar1 = new Cevaplar( null );
+        kullanicilar = new Kullanicilar( UUID.randomUUID().toString() );
+        cevaplar1 = new ArrayList<String>();
 
 
         //FİREBASEDEN ODA BİLGİLERİ OKUNACAK SORULAR ALINACAK
@@ -63,9 +58,6 @@ public class Main2Activity extends AppCompatActivity {
 
                 //Firebaseye Cevapları Göndermek İçin
 
-                cevaplar = new ArrayList<String>();
-                cevaplar.add( Cevap.getText().toString() );
-                cevaplar1.setCevaplar( cevaplar );
 
 
 
