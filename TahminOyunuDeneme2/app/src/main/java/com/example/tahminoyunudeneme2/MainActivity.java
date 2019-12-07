@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private ArrayList<String> odakullanicilari;
     Odalar odalar;
     private ArrayList<String> sorularList;
+    private ArrayList<Integer> cevaplar2;
+    Sorular sorular;
 
 
 
@@ -63,6 +65,7 @@ public class MainActivity extends AppCompatActivity {
         FirebaseApp.initializeApp( this );
 
         odakullanicilari = new ArrayList<String>();
+        cevaplar2 = new ArrayList<Integer>();
         kullanicilar = new Kullanicilar( UUID.randomUUID().toString() );
 
         btn_sign_out = findViewById( R.id.btn_sign_out );
@@ -149,6 +152,10 @@ public class MainActivity extends AppCompatActivity {
                                                     odakullanicilari.add( kullanicilar.getUid());
                                                     databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
                                                     Intent anasayfagec = new Intent( MainActivity.this, Main2Activity.class );
+                                                    anasayfagec.putExtra( "kullaniciuid",kullanicilar.getUid().toString());
+                                                    anasayfagec.putExtra( "odauid",odalar.getOdauid().toString());
+                                                    anasayfagec.putExtra( "odakullanicilari", odakullanicilari );
+                                                    anasayfagec.putExtra( "sorularlist",sorularList );
                                                     startActivity( anasayfagec );
                                                 }else{
                                                     oyunabasla();
@@ -176,25 +183,32 @@ public class MainActivity extends AppCompatActivity {
 
     private void oyunabasla() {
 
+        sorular = new Sorular( null,0 );
+
         sorularList = new ArrayList<String>();
+        cevaplar2.add( 0,0 );
+        cevaplar2.add( 1,0 );
+
         //Yeni Oda Yarat
 
-        odalar = new Odalar( UUID.randomUUID().toString(),true,odakullanicilari,sorularList);
+        odalar = new Odalar( UUID.randomUUID().toString(),true,odakullanicilari,sorularList,cevaplar2);
 
         odakullanicilari = new ArrayList<String>();
         odakullanicilari.add( kullanicilar.getUid());
         odalar.setKullaniciuid( odakullanicilari );
+        odalar.setCevaplar( cevaplar2 );
         //DB'DEN SORULARI AL;
         databaseReference.child( "Sorular" ).addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
+
+                //SORULARI SORU METNİ VE CEVAP OLARAK AYRI AYRI AMA AYNI SORUNUN CEVABINI ALMASI LAZIM
 
                 for (DataSnapshot soruSnapshot: dataSnapshot.getChildren()) {
                     sorularList.add( Objects.requireNonNull( soruSnapshot.getValue() ).toString() );
                     Log.e( "sorular alınıyor","+++++"+soruSnapshot );
                 }
 
-                //SORULARI DB DEN ALIP ODANIN İÇİNE ATMASI LAZIM AMA ÇALIŞMIYOR*******************************************************************************************
                 odalar.setOdadakisorular( sorularList );
 
                 Log.e("Oda Açılıyor","----");

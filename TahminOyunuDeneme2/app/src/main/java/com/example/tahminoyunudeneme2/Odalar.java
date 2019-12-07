@@ -7,19 +7,26 @@ public class Odalar {
     private String odauid;
     private Boolean musaitmi;
     private List<String> kullaniciuid, odadakisorular ;
-
-
+    private List<Integer> cevaplar;
 
     public Odalar() {
     }
 
 
-
-    public Odalar(String odauid, Boolean musaitmi, List<String> kullaniciuid,List<String> odadakisorular) {
+    public Odalar(String odauid, Boolean musaitmi, List<String> kullaniciuid, List<String> odadakisorular,List<Integer> cevaplar) {
         this.odauid = odauid;
         this.musaitmi = musaitmi;
         this.kullaniciuid = kullaniciuid;
         this.odadakisorular = odadakisorular;
+        this.cevaplar = cevaplar;
+    }
+
+    public List<Integer> getCevaplar() {
+        return cevaplar;
+    }
+
+    public void setCevaplar(List<Integer> cevaplar) {
+        this.cevaplar = cevaplar;
     }
 
     public List<String> getOdadakisorular() {
