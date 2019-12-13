@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -29,6 +30,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -45,13 +47,12 @@ public class MainActivity extends AppCompatActivity {
     Kullanicilar kullanicilar;
     private ArrayList<String> odakullanicilari;
     Odalar odalar;
-    private ArrayList<String> sorularList;
+    private ArrayList<Sorular> sorularList;
     private ArrayList<Integer> cevaplar2;
     Sorular sorular;
-
-
-
-
+    String sorumetni;
+    String sorucevap;
+    int sorucevap1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +68,8 @@ public class MainActivity extends AppCompatActivity {
         odakullanicilari = new ArrayList<String>();
         cevaplar2 = new ArrayList<Integer>();
         kullanicilar = new Kullanicilar( UUID.randomUUID().toString() );
+        sorular = new Sorular( null,0 );
+
 
         btn_sign_out = findViewById( R.id.btn_sign_out );
         OyunaBasla = (Button)findViewById( R.id.OyunaBasla );
@@ -152,10 +155,6 @@ public class MainActivity extends AppCompatActivity {
                                                     odakullanicilari.add( kullanicilar.getUid());
                                                     databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
                                                     Intent anasayfagec = new Intent( MainActivity.this, Main2Activity.class );
-                                                    anasayfagec.putExtra( "kullaniciuid",kullanicilar.getUid().toString());
-                                                    anasayfagec.putExtra( "odauid",odalar.getOdauid().toString());
-                                                    anasayfagec.putExtra( "odakullanicilari", odakullanicilari );
-                                                    anasayfagec.putExtra( "sorularlist",sorularList );
                                                     startActivity( anasayfagec );
                                                 }else{
                                                     oyunabasla();
@@ -181,11 +180,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("UseSparseArrays")
     private void oyunabasla() {
 
-        sorular = new Sorular( null,0 );
 
-        sorularList = new ArrayList<String>();
+
+        sorularList = new ArrayList<Sorular>(  );
         cevaplar2.add( 0,0 );
         cevaplar2.add( 1,0 );
 
@@ -198,15 +198,21 @@ public class MainActivity extends AppCompatActivity {
         odalar.setKullaniciuid( odakullanicilari );
         odalar.setCevaplar( cevaplar2 );
         //DB'DEN SORULARI AL;
-        databaseReference.child( "Sorular" ).addListenerForSingleValueEvent( new ValueEventListener() {
+        databaseReference.child( "Sorular" ).addValueEventListener( new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 //SORULARI SORU METNİ VE CEVAP OLARAK AYRI AYRI AMA AYNI SORUNUN CEVABINI ALMASI LAZIM
 
-                for (DataSnapshot soruSnapshot: dataSnapshot.getChildren()) {
-                    sorularList.add( Objects.requireNonNull( soruSnapshot.getValue() ).toString() );
-                    Log.e( "sorular alınıyor","+++++"+soruSnapshot );
+                for (DataSnapshot sorumetnisnap:dataSnapshot.getChildren()){
+                    sorumetni= (String) sorumetnisnap.child( "SoruMetni" ).getValue();
+                    Log.e( "sorular alınıyor","+++++ "+sorumetni);
+                    sorucevap= (String) sorumetnisnap.child( "Cevap" ).getValue();
+                    sorucevap1 = Integer.parseInt( sorucevap );
+                    Log.e( "sorular alınıyor","+++++ "+sorucevap1);
+                    sorular.setSorumetni( sorumetni );
+                    sorular.setSorucevap( sorucevap1 );
+                    sorularList.add( sorular );
                 }
 
                 odalar.setOdadakisorular( sorularList );

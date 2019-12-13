@@ -1,5 +1,6 @@
 package com.example.tahminoyunudeneme2;
 
+
 public class Sorular {
     private String sorumetni;
     private Integer sorucevap;

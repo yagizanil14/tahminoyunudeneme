@@ -1,19 +1,20 @@
 package com.example.tahminoyunudeneme2;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class Odalar {
     private String odauid;
     private Boolean musaitmi;
-    private List<String> kullaniciuid, odadakisorular ;
+    private List<String> kullaniciuid ;
     private List<Integer> cevaplar;
-
+    private List<Sorular> odadakisorular;
     public Odalar() {
     }
 
 
-    public Odalar(String odauid, Boolean musaitmi, List<String> kullaniciuid, List<String> odadakisorular,List<Integer> cevaplar) {
+    public Odalar(String odauid, Boolean musaitmi, List<String> kullaniciuid, List<Sorular> odadakisorular,List<Integer> cevaplar) {
         this.odauid = odauid;
         this.musaitmi = musaitmi;
         this.kullaniciuid = kullaniciuid;
@@ -29,11 +30,11 @@ public class Odalar {
         this.cevaplar = cevaplar;
     }
 
-    public List<String> getOdadakisorular() {
+    public List<Sorular> getOdadakisorular() {
         return odadakisorular;
     }
 
-    public void setOdadakisorular(List<String> odadakisorular) {
+    public void setOdadakisorular(List<Sorular> odadakisorular) {
         this.odadakisorular = odadakisorular;
     }
 

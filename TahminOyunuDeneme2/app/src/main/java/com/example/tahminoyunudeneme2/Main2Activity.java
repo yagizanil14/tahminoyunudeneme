@@ -52,17 +52,10 @@ public class Main2Activity extends AppCompatActivity {
         Cevabi_Gonder = (Button)findViewById( R.id.Cevabı_Gonder );
         Anasayfaya_git = (Button)findViewById( R.id.anasayfa );
 
-        Intent intent = getIntent();
-        final String odauid = intent.getStringExtra( "odauid" );
-        String kullaniciuid = intent.getStringExtra( "kullaniciuid" );
-        ArrayList<String> odakullanicilari = intent.getStringArrayListExtra( "odakullanicilari" );
-        ArrayList<String> sorularlist = intent.getStringArrayListExtra( "sorularlist" );
+
         cevaplar2 = new ArrayList<Integer>(  );
 
-        odalar = new Odalar( odauid,false,odakullanicilari,sorularlist,cevaplar2 );
-
-        sorumetni.setText( sorularlist.toString());
-
+        sorumetni.setText( sorular.getSorumetni());
 
 
 
