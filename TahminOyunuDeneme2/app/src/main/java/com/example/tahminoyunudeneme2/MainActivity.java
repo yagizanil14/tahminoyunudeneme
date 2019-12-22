@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -45,14 +46,15 @@ public class MainActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     DatabaseReference dbsorular;
     Kullanicilar kullanicilar;
-    private ArrayList<String> odakullanicilari;
-    Odalar odalar;
-    private ArrayList<Sorular> sorularList;
-    private ArrayList<Integer> cevaplar2;
+     ArrayList<String> odakullanicilari,odadakicevaplar;
+   public Odalar odalar;
+     ArrayList<Sorular> sorularList;
+     ArrayList<Cevaplar> cevaplar2;
     Sorular sorular;
     String sorumetni;
     String sorucevap;
     int sorucevap1;
+    Cevaplar cevaplar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,9 +68,8 @@ public class MainActivity extends AppCompatActivity {
         FirebaseApp.initializeApp( this );
 
         odakullanicilari = new ArrayList<String>();
-        cevaplar2 = new ArrayList<Integer>();
         kullanicilar = new Kullanicilar( UUID.randomUUID().toString() );
-        sorular = new Sorular( null,0 );
+        cevaplar = new Cevaplar();
 
 
         btn_sign_out = findViewById( R.id.btn_sign_out );
@@ -155,6 +156,9 @@ public class MainActivity extends AppCompatActivity {
                                                     odakullanicilari.add( kullanicilar.getUid());
                                                     databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
                                                     Intent anasayfagec = new Intent( MainActivity.this, Main2Activity.class );
+                                                    anasayfagec.putExtra( "odauid",odalar.getOdauid());
+                                                    anasayfagec.putExtra( "kullaniciuid", kullanicilar.getUid());
+                                                    anasayfagec.putExtra( "odalar",Odalar.class );
                                                     startActivity( anasayfagec );
                                                 }else{
                                                     oyunabasla();
@@ -180,14 +184,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("UseSparseArrays")
+
+
     private void oyunabasla() {
-
-
-
-        sorularList = new ArrayList<Sorular>(  );
-        cevaplar2.add( 0,0 );
-        cevaplar2.add( 1,0 );
 
         //Yeni Oda Yarat
 
@@ -196,29 +195,46 @@ public class MainActivity extends AppCompatActivity {
         odakullanicilari = new ArrayList<String>();
         odakullanicilari.add( kullanicilar.getUid());
         odalar.setKullaniciuid( odakullanicilari );
+
+        //odadakicevaplar = new ArrayList<>(  );
+        //odadakicevaplar.add( 0,"0" );
+
+        cevaplar2 = new ArrayList<>(  );
+        cevaplar.setCevaplar1( "1" );
+        cevaplar.setCevaplar2( "1" );
+        cevaplar2.add( cevaplar );
+       // cevaplar.setCevaplar1( odadakicevaplar );
+
+       // cevaplar2 = new ArrayList<Cevaplar>();
+        sorularList = new ArrayList<Sorular>(  );
+       // cevaplar2.add( cevaplar );
         odalar.setCevaplar( cevaplar2 );
         //DB'DEN SORULARI AL;
+
         databaseReference.child( "Sorular" ).addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
 
                 //SORULARI SORU METNİ VE CEVAP OLARAK AYRI AYRI AMA AYNI SORUNUN CEVABINI ALMASI LAZIM
 
-                for (DataSnapshot sorumetnisnap:dataSnapshot.getChildren()){
+                for (DataSnapshot sorumetnisnap:dataSnapshot.getChildren()){//ve ekleyip sayaç eklicez sayaç 10 olduğunda fordan çıkacak
+                    sorular = new Sorular( null,null );
                     sorumetni= (String) sorumetnisnap.child( "SoruMetni" ).getValue();
+                    sorular.setSorumetni( sorumetni );
                     Log.e( "sorular alınıyor","+++++ "+sorumetni);
                     sorucevap= (String) sorumetnisnap.child( "Cevap" ).getValue();
-                    sorucevap1 = Integer.parseInt( sorucevap );
+                    sorular.setSorucevap( sorucevap );
                     Log.e( "sorular alınıyor","+++++ "+sorucevap1);
-                    sorular.setSorumetni( sorumetni );
-                    sorular.setSorucevap( sorucevap1 );
                     sorularList.add( sorular );
                 }
 
-                odalar.setOdadakisorular( sorularList );
 
+                odalar.setOdadakisorular( sorularList );
                 Log.e("Oda Açılıyor","----");
                 databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
+                Intent anasayfagec = new Intent( MainActivity.this, Main2Activity.class );
+                anasayfagec.putExtra( "odauid",odalar.getOdauid());
+                startActivity( anasayfagec );
             }
 
 

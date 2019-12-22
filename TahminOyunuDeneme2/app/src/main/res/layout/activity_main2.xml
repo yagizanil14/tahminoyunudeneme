@@ -9,6 +9,13 @@
     tools:context=".Main2Activity">
 
     <TextView
+        android:id="@+id/sayac"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:width="50dp"
+        android:height="35dp" />
+
+    <TextView
         android:id="@+id/SoruMetni"
         android:layout_width="match_parent"
         android:layout_height="250dp"

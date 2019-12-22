@@ -2,13 +2,12 @@ package com.example.tahminoyunudeneme2;
 
 
 public class Sorular {
-    private String sorumetni;
-    private Integer sorucevap;
+    private String sorumetni,sorucevap;
 
     public Sorular() {
     }
 
-    public Sorular(String sorumetni, Integer sorucevap) {
+    public Sorular(String sorumetni, String sorucevap) {
         this.sorumetni = sorumetni;
         this.sorucevap = sorucevap;
     }
@@ -21,11 +20,11 @@ public class Sorular {
         this.sorumetni = sorumetni;
     }
 
-    public Integer getSorucevap() {
+    public String getSorucevap() {
         return sorucevap;
     }
 
-    public void setSorucevap(Integer sorucevap) {
+    public void setSorucevap(String sorucevap) {
         this.sorucevap = sorucevap;
     }
 }

@@ -8,13 +8,14 @@ public class Odalar {
     private String odauid;
     private Boolean musaitmi;
     private List<String> kullaniciuid ;
-    private List<Integer> cevaplar;
+    private List<Cevaplar> cevaplar;
     private List<Sorular> odadakisorular;
+
     public Odalar() {
     }
 
 
-    public Odalar(String odauid, Boolean musaitmi, List<String> kullaniciuid, List<Sorular> odadakisorular,List<Integer> cevaplar) {
+    public Odalar(String odauid, Boolean musaitmi, List<String> kullaniciuid, List<Sorular> odadakisorular,List<Cevaplar> cevaplar) {
         this.odauid = odauid;
         this.musaitmi = musaitmi;
         this.kullaniciuid = kullaniciuid;
@@ -22,11 +23,11 @@ public class Odalar {
         this.cevaplar = cevaplar;
     }
 
-    public List<Integer> getCevaplar() {
+    public List<Cevaplar> getCevaplar() {
         return cevaplar;
     }
 
-    public void setCevaplar(List<Integer> cevaplar) {
+    public void setCevaplar(List<Cevaplar> cevaplar) {
         this.cevaplar = cevaplar;
     }
 
@@ -61,6 +62,7 @@ public class Odalar {
     public void setOdauid(String odauid) {
         this.odauid = odauid;
     }
+
 
 
 }
