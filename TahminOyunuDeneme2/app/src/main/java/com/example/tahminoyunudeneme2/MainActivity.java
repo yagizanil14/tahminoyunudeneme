@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference databaseReference;
     DatabaseReference dbsorular;
-    Kullanicilar kullanicilar;
+    public static Kullanicilar kullanicilar;
      ArrayList<String> odakullanicilari,odadakicevaplar;
    public Odalar odalar;
      ArrayList<Sorular> sorularList;
@@ -200,8 +200,6 @@ public class MainActivity extends AppCompatActivity {
         //odadakicevaplar.add( 0,"0" );
 
         cevaplar2 = new ArrayList<>(  );
-        cevaplar.setCevaplar1( "1" );
-        cevaplar.setCevaplar2( "1" );
         cevaplar2.add( cevaplar );
        // cevaplar.setCevaplar1( odadakicevaplar );
 
@@ -222,9 +220,9 @@ public class MainActivity extends AppCompatActivity {
                     sorumetni= (String) sorumetnisnap.child( "SoruMetni" ).getValue();
                     sorular.setSorumetni( sorumetni );
                     Log.e( "sorular alınıyor","+++++ "+sorumetni);
-                    sorucevap= (String) sorumetnisnap.child( "Cevap" ).getValue();
-                    sorular.setSorucevap( sorucevap );
-                    Log.e( "sorular alınıyor","+++++ "+sorucevap1);
+                    sorucevap1 = (int) sorumetnisnap.child( "Cevap" ).getValue(Integer.class);
+                    sorular.setSorucevap( sorucevap1 );
+                    Log.e( "sorular cevap alınıyor","+++++ "+sorucevap1);
                     sorularList.add( sorular );
                 }
 
