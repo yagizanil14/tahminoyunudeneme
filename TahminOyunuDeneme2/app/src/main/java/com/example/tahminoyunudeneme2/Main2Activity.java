@@ -37,7 +37,7 @@ public class Main2Activity extends AppCompatActivity {
     boolean yenisorugectf, oyunBasladi;
     String odauid,kullaniciuid;
     ArrayList<Sorular> sorular = new ArrayList<>(  );
-    Integer sorunumarasi;
+    Integer sorunumarasi,benimSkor,onunSkor;
 
 
     @Override
@@ -165,8 +165,8 @@ public class Main2Activity extends AppCompatActivity {
         databaseReference.child( "Odalar" ).child( odauid ).child( "cevaplar" ).addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                Integer benimSkor = 0;
-                Integer onunSkor = 0;
+                 benimSkor = 0;
+                 onunSkor = 0;
                 for (DataSnapshot sorusnap:dataSnapshot.getChildren()){
                     Integer cevap = sorular.get(Integer.parseInt( sorusnap.getKey() )).getSorucevap();
                     Integer benimCevap = 0, onunCevabi = 0;
@@ -196,6 +196,24 @@ public class Main2Activity extends AppCompatActivity {
         } );
     }
 
+    private void araskorlarigoster(final Integer index){
+        cevaplarial();
+        sorunumarasi = index;
+
+        countDownTimer = new CountDownTimer(10000,1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                sayac.setText(String.valueOf(millisUntilFinished/1000));
+                sorumetni.setText( "Senin Skorun" + benimSkor +"\n"+" Onun Skoru" + onunSkor +"\n"+ "Doğru Cevap" + sorular.get( index ).getSorucevap());
+            }
+
+            @Override
+            public void onFinish() {
+                soruyugoster( index+1 );
+            }
+        }.start();
+    }
+
     private void oyunsonunugoster() {
 
         cevaplarial();
@@ -213,14 +231,15 @@ public class Main2Activity extends AppCompatActivity {
                 if (yenisorugectf){
                     Log.e( "onTick Çalıştı", "OnTick Çalıştı" );
                     countDownTimer.cancel();
-                    soruyugoster( index+1 );
+                    araskorlarigoster( index );
+                   // soruyugoster( index+1 );
                 }
             }
 
             @Override
             public void onFinish() {
                 Log.e( "onFnish","OnFnish metodu çalıştı" );
-                soruyugoster( index+1 );
+                araskorlarigoster( index );
             }
         }.start();
     }

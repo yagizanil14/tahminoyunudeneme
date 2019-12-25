@@ -34,6 +34,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
+import java.util.Random;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
@@ -48,13 +49,15 @@ public class MainActivity extends AppCompatActivity {
     public static Kullanicilar kullanicilar;
      ArrayList<String> odakullanicilari,odadakicevaplar;
    public Odalar odalar;
-     ArrayList<Sorular> sorularList;
+     ArrayList<Sorular> sorularList,sorularlist2;
      ArrayList<Cevaplar> cevaplar2;
     Sorular sorular;
     String sorumetni;
-    String sorucevap;
-    int sorucevap1;
+    int sorucevap1, index;
     Cevaplar cevaplar;
+    HashMap<Integer,Sorular> hashsorular;
+    Random randomsayi;
+    ArrayList<Integer> rndsayilar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +74,11 @@ public class MainActivity extends AppCompatActivity {
         kullanicilar = new Kullanicilar( UUID.randomUUID().toString() );
         cevaplar = new Cevaplar();
 
+        index = 0;
 
         btn_sign_out = findViewById( R.id.btn_sign_out );
         OyunaBasla = (Button)findViewById( R.id.OyunaBasla );
+        hashsorular = new HashMap<>(  );
 
         btn_sign_out.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -199,15 +204,20 @@ public class MainActivity extends AppCompatActivity {
         //odadakicevaplar = new ArrayList<>(  );
         //odadakicevaplar.add( 0,"0" );
 
+        rndsayilar = new ArrayList<>(  );
+
         cevaplar2 = new ArrayList<>(  );
         cevaplar2.add( cevaplar );
        // cevaplar.setCevaplar1( odadakicevaplar );
 
        // cevaplar2 = new ArrayList<Cevaplar>();
         sorularList = new ArrayList<Sorular>(  );
+        sorularlist2 = new ArrayList<>(  );
        // cevaplar2.add( cevaplar );
         odalar.setCevaplar( cevaplar2 );
         //DB'DEN SORULARI AL;
+
+
 
         databaseReference.child( "Sorular" ).addValueEventListener( new ValueEventListener() {
             @Override
@@ -216,18 +226,28 @@ public class MainActivity extends AppCompatActivity {
                 //SORULARI SORU METNİ VE CEVAP OLARAK AYRI AYRI AMA AYNI SORUNUN CEVABINI ALMASI LAZIM
 
                 for (DataSnapshot sorumetnisnap:dataSnapshot.getChildren()){//ve ekleyip sayaç eklicez sayaç 10 olduğunda fordan çıkacak
-                    sorular = new Sorular( null,null );
-                    sorumetni= (String) sorumetnisnap.child( "SoruMetni" ).getValue();
-                    sorular.setSorumetni( sorumetni );
-                    Log.e( "sorular alınıyor","+++++ "+sorumetni);
-                    sorucevap1 = (int) sorumetnisnap.child( "Cevap" ).getValue(Integer.class);
-                    sorular.setSorucevap( sorucevap1 );
-                    Log.e( "sorular cevap alınıyor","+++++ "+sorucevap1);
-                    sorularList.add( sorular );
+                        index++;
+                        sorular = new Sorular( null, null );
+                        sorumetni = (String) sorumetnisnap.child( "SoruMetni" ).getValue();
+                        sorular.setSorumetni( sorumetni );
+                        Log.e( "sorular alınıyor", "+++++ " + sorumetni );
+                        sorucevap1 = (int) sorumetnisnap.child( "Cevap" ).getValue( Integer.class );
+                        sorular.setSorucevap( sorucevap1 );
+                        Log.e( "sorular cevap alınıyor", "+++++ " + sorucevap1 );
+                        sorularList.add( sorular );
                 }
 
+                randomsayi = new Random(  );
 
-                odalar.setOdadakisorular( sorularList );
+                for (int b = sorularlist2.size(); b<10; b = sorularlist2.size()){
+                 int randomsayi1 = randomsayi.nextInt(index);
+                 if (!rndsayilar.contains( randomsayi1 )){
+                     sorularlist2.add( sorularList.get( randomsayi1 ) );
+                 }
+                    rndsayilar.add( randomsayi1 );
+                }
+
+                odalar.setOdadakisorular( sorularlist2 );
                 Log.e("Oda Açılıyor","----");
                 databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
                 Intent anasayfagec = new Intent( MainActivity.this, Main2Activity.class );
