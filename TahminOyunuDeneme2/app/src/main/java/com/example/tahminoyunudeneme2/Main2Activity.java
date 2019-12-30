@@ -27,9 +27,9 @@ import java.util.UUID;
 
 public class Main2Activity extends AppCompatActivity {
 
-    EditText Cevap;
-    TextView sorumetni, sayac;
-    Button Cevabi_Gonder, Anasayfaya_git;
+    EditText Cevap,edtmsj;
+    TextView sorumetni, sayac, mesajbox;
+    Button Cevabi_Gonder, Anasayfaya_git,mesajgonder;
     FirebaseDatabase database;
     DatabaseReference databaseReference;
 
@@ -38,6 +38,10 @@ public class Main2Activity extends AppCompatActivity {
     String odauid,kullaniciuid;
     ArrayList<Sorular> sorular = new ArrayList<>(  );
     Integer sorunumarasi,benimSkor,onunSkor;
+    int cvphak=1;
+    Integer benimCevap, onunCevabi;
+    ArrayList<Mesajlar> gelenmsj= new ArrayList<>(  );
+    Mesajlar messajlar = new Mesajlar("","");
 
 
     @Override
@@ -50,13 +54,15 @@ public class Main2Activity extends AppCompatActivity {
         databaseReference = database.getReference();
         FirebaseApp.initializeApp( this );
 
+        edtmsj = (EditText)findViewById( R.id.edtmsj );
+        mesajbox = (TextView)findViewById( R.id.mesajbox );
+        mesajgonder = (Button)findViewById( R.id.mesajgonder );
         sorumetni = (TextView) findViewById( R.id.SoruMetni );
         sayac = (TextView)findViewById( R.id.sayac );
         Cevap = (EditText)findViewById( R.id.Cevap );
         Cevabi_Gonder = (Button)findViewById( R.id.Cevabı_Gonder );
         Anasayfaya_git = (Button)findViewById( R.id.anasayfa );
         kullaniciuid = MainActivity.kullanicilar.getUid();
-
 
         Cevabi_Gonder.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -77,15 +83,58 @@ public class Main2Activity extends AppCompatActivity {
 
         odauidal();
         sorularial();
+        mesajoku();
 
+        mesajgonder.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mesajgonder();
+            }
+        } );
 
 
     }
 
+    private void mesajoku(){
+        databaseReference.child( "Odalar" ).child( odauid ).child( "mesajlar" ).addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot mesajsnap:dataSnapshot.getChildren()){
+                    if (mesajsnap.getKey().equals( kullaniciuid )){
+                        String benimmsj = mesajsnap.getValue().toString();
+                        messajlar.setMesajlar( "Sen:"+benimmsj );
+                        gelenmsj.add( messajlar );
+                        Log.e( "benim mesaj",messajlar.getMesajlar() );
+                    }else {
+                        String onunmsj = mesajsnap.getValue().toString();
+                        messajlar.setRakipmesaj( "Rakip:"+onunmsj );
+                        gelenmsj.add( messajlar );
+                        Log.e( "onun mesaj",onunmsj );
+                    }
+                }
+                mesajbox.setText(messajlar.getMesajlar()+"\n"+messajlar.getRakipmesaj());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+    }
+
+    private void mesajgonder(){
+        String edttmsj= edtmsj.getText().toString();
+        databaseReference.child( "Odalar" ).child( odauid ).child( "mesajlar" ).child( kullaniciuid ).setValue( edttmsj );
+    }
+
     private void cevapgonder() {
-        int kcevap = Integer.parseInt(Cevap.getText().toString()) ;
-        databaseReference.child( "Odalar" ).child( odauid ).child( "cevaplar" ).child( sorunumarasi.toString() ).child( kullaniciuid ).setValue( kcevap );
-        soruyubekle();
+
+        if (cvphak >0) {
+            cvphak--;
+            int kcevap = Integer.parseInt( Cevap.getText().toString() );
+            databaseReference.child( "Odalar" ).child( odauid ).child( "cevaplar" ).child( sorunumarasi.toString() ).child( kullaniciuid ).setValue( kcevap );
+            soruyubekle();
+        }
     }
 
     private void sorularial(){
@@ -169,9 +218,10 @@ public class Main2Activity extends AppCompatActivity {
                  onunSkor = 0;
                 for (DataSnapshot sorusnap:dataSnapshot.getChildren()){
                     Integer cevap = sorular.get(Integer.parseInt( sorusnap.getKey() )).getSorucevap();
-                    Integer benimCevap = 0, onunCevabi = 0;
+                     benimCevap = 0;
+                     onunCevabi = 0;
                     for (DataSnapshot cevapsnap:sorusnap.getChildren()){
-                        if(cevapsnap.getKey() == kullaniciuid){
+                        if(cevapsnap.getKey().equals( kullaniciuid ) ){
                             benimCevap = Integer.parseInt( cevapsnap.getValue().toString() );
                         }else {
                             onunCevabi = Integer.parseInt( cevapsnap.getValue().toString() );
@@ -204,11 +254,12 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             public void onTick(long millisUntilFinished) {
                 sayac.setText(String.valueOf(millisUntilFinished/1000));
-                sorumetni.setText( "Senin Skorun" + benimSkor +"\n"+" Onun Skoru" + onunSkor +"\n"+ "Doğru Cevap" + sorular.get( index ).getSorucevap());
+                sorumetni.setText( "Senin Skorun" + benimSkor +"\n"+"Senin Cevabın"+benimCevap+"\n"+" Onun Skoru" + onunSkor +"\n"+"Rakibin Cevabı:"+onunCevabi+"\n"+ "Doğru Cevap" + sorular.get( index ).getSorucevap());
             }
 
             @Override
             public void onFinish() {
+                cvphak++;
                 soruyugoster( index+1 );
             }
         }.start();
@@ -220,16 +271,16 @@ public class Main2Activity extends AppCompatActivity {
         sayac.setVisibility( View.INVISIBLE );
         Cevap.setVisibility( View.INVISIBLE );
         Cevabi_Gonder.setVisibility( View.INVISIBLE );
+        sorumetni.setText( "Senin Skorun" + benimSkor +"\n"+" Onun Skoru" + onunSkor );
 
     }
 
     private void zamanibaslat(final Integer index){
-         countDownTimer = new CountDownTimer(20000,1000) {
+         countDownTimer = new CountDownTimer(60000,1000) {
             @Override
             public void onTick(long millisUntilFinished) {
                 sayac.setText(String.valueOf(millisUntilFinished/1000));
                 if (yenisorugectf){
-                    Log.e( "onTick Çalıştı", "OnTick Çalıştı" );
                     countDownTimer.cancel();
                     araskorlarigoster( index );
                    // soruyugoster( index+1 );
@@ -238,7 +289,6 @@ public class Main2Activity extends AppCompatActivity {
 
             @Override
             public void onFinish() {
-                Log.e( "onFnish","OnFnish metodu çalıştı" );
                 araskorlarigoster( index );
             }
         }.start();
@@ -251,7 +301,6 @@ public class Main2Activity extends AppCompatActivity {
 
              if ( dataSnapshot.getChildrenCount() == 2){
                  yenisorugectf = true;
-                 Log.e( "yenisorugectf","lalal" );
              }
             }
 

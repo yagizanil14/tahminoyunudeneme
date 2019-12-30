@@ -1,49 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".Main2Activity">
 
     <TextView
         android:id="@+id/sayac"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="71dp"
         android:width="50dp"
-        android:height="35dp" />
+        android:height="35dp"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textColor="@color/fui_bgAnonymous"
+        android:textSize="30dp"
+        android:textStyle="bold|italic"
+        tools:layout_editor_absoluteX="216dp" />
 
     <TextView
         android:id="@+id/SoruMetni"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_marginTop="100dp"
-        android:text="SORULAR"
-        tools:layout_editor_absoluteX="206dp"
-        tools:layout_editor_absoluteY="267dp" />
+        android:layout_height="wrap_content"
+        android:textSize="20sp"
+        tools:layout_editor_absoluteY="96dp" />
 
-    <EditText
-        android:layout_marginTop="50dp"
-        android:id="@+id/Cevap"
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/Cevap"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Cevabı Giriniz"
+            android:inputType="number"
+            tools:layout_editor_absoluteX="11dp"
+            tools:layout_editor_absoluteY="309dp" />
+
+        <Button
+            android:id="@+id/Cevabı_Gonder"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Gönder"
+            tools:layout_editor_absoluteX="261dp"
+            tools:layout_editor_absoluteY="246dp" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/mesajbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="number"
-        android:hint="Cevabı Giriniz" />
+        android:text="konuşmalar"
+        android:textSize="20dp"
+        android:visibility="visible"
+        tools:layout_editor_absoluteX="80dp"
+        tools:layout_editor_absoluteY="414dp" />
 
-    <Button
-        android:id="@+id/Cevabı_Gonder"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Gönder" />
+        android:orientation="horizontal">
+
+
+        <EditText
+            android:id="@+id/edtmsj"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="Mesajınız"
+            android:inputType="textPersonName"
+            android:visibility="visible"
+            tools:layout_editor_absoluteX="80dp"
+            tools:layout_editor_absoluteY="584dp" />
+
+        <Button
+            android:id="@+id/mesajgonder"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="gönder"
+            android:visibility="visible"
+            tools:layout_editor_absoluteX="230dp"
+            tools:layout_editor_absoluteY="584dp" />
+    </LinearLayout>
+
+
 
     <Button
         android:id="@+id/anasayfa"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ana Sayfaya Git" />
+        android:text="Ana Sayfaya Git"
+        tools:layout_editor_absoluteY="683dp" />
 
 
 </LinearLayout>
