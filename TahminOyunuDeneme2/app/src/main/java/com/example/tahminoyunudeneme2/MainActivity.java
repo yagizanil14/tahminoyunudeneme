@@ -56,9 +56,9 @@ public class MainActivity extends AppCompatActivity {
      ArrayList<Sorular> sorularList,sorularlist2;
      ArrayList<Cevaplar> cevaplar2;
     Sorular sorular;
-    String sorumetni;
-    int sorucevap1, index;
-    Integer skorun = 0;
+    String sorumetni,kullaniciuid;
+    Integer sorucevap1;
+    Integer skorun = 0,index;
     Cevaplar cevaplar;
     HashMap<Integer,Sorular> hashsorular;
     Random randomsayi;
@@ -140,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText( this, ""+ user.getEmail(), Toast.LENGTH_SHORT ).show();
 
                 kullanicilar = new Kullanicilar( user.getUid(),user.getDisplayName(),null );
+                kullaniciuid= user.getUid();
 
                 databaseReference.child( "Kullanicilar" ).child( kullanicilar.getUid() ).child( "KullaniciAdi" ).setValue( kullanicilar.getKullaniciAdi() );
 
@@ -181,7 +182,7 @@ public class MainActivity extends AppCompatActivity {
                                                     databaseReference.child( "Odalar" ).child( odalar.getOdauid() ).setValue( odalar );
                                                     Intent anasayfagec = new Intent( MainActivity.this, Main2Activity.class );
                                                     anasayfagec.putExtra( "odauid",odalar.getOdauid());
-                                                    anasayfagec.putExtra( "kullaniciuid", kullanicilar.getUid());
+                                                    anasayfagec.putExtra( "kullaniciuid", kullaniciuid);
                                                     anasayfagec.putExtra( "odalar",Odalar.class );
                                                     startActivity( anasayfagec );
                                                 }else{
@@ -223,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
             }
         } );
-        databaseReference.child( "Kullanicilar" ).child( kullanicilar.getUid() ).child( "Skorlar" ).setValue( skorun );
+       // databaseReference.child( "Kullanicilar" ).child( kullanicilar.getUid() ).child( "Skorlar" ).setValue( skorun );
 
         String strskor = String.valueOf( skorun );
 
@@ -240,7 +241,7 @@ public class MainActivity extends AppCompatActivity {
                 String skrtbl = String.valueOf( skorlarsnap.child( "Skorlar" ).getValue() );
                 String kllaniciadi = String.valueOf(skorlarsnap.child( "KullaniciAdi" ).getValue());
 
-                kullanicilar = new Kullanicilar( null,kllaniciadi,skrtbl );
+                kullanicilar = new Kullanicilar( kullaniciuid,kllaniciadi,skrtbl );
 
                 skorlarary.add( kullanicilar );
 
@@ -307,7 +308,7 @@ public class MainActivity extends AppCompatActivity {
                         sorumetni = (String) sorumetnisnap.child( "SoruMetni" ).getValue();
                         sorular.setSorumetni( sorumetni );
                         Log.e( "sorular alınıyor", "+++++ " + sorumetni );
-                        sorucevap1 = (int) sorumetnisnap.child( "Cevap" ).getValue( Integer.class );
+                        sorucevap1 = (Integer) sorumetnisnap.child( "Cevap" ).getValue( Integer.class );
                         sorular.setSorucevap( sorucevap1 );
                         Log.e( "sorular cevap alınıyor", "+++++ " + sorucevap1 );
                         sorularList.add( sorular );

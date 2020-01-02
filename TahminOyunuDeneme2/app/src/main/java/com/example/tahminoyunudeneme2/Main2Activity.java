@@ -66,7 +66,7 @@ public class Main2Activity extends AppCompatActivity {
 
 
 
-       // kullaniciuid = MainActivity.kullanicilar.getUid(); // ALAMIYOR AYARLA
+        kullaniciuid = MainActivity.kullanicilar.getUid();
 
         Cevabi_Gonder.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -86,7 +86,7 @@ public class Main2Activity extends AppCompatActivity {
             }
         } );
 
-        kullaniciuidal();
+        //kullaniciuidal();
         odauidal();
         sorularial();
         mesajoku();
@@ -289,11 +289,13 @@ public class Main2Activity extends AppCompatActivity {
     }
 
     private void skorlariyaz(){
-        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).addListenerForSingleValueEvent( new ValueEventListener() {
+        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Skorlar" ).addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot skorsnap:dataSnapshot.getChildren()){
-                    skorun = ( Integer ) skorsnap.child( "Skorlar" ).getValue();
+                  //  String strskor = skorsnap.child( "Skorlar" ).getValue().toString();
+                   // Log.e( "Skorun",strskor );
+                    skorun = Integer.parseInt( skorsnap.getValue().toString() );
                 }
             }
 
