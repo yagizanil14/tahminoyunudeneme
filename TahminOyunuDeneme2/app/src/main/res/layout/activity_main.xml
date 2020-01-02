@@ -8,6 +8,39 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textskortbl"
+            android:layout_width="220dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="top"
+            android:layout_weight="1"
+            android:gravity="top"
+            android:textColor="@color/fui_bgAnonymous"
+            android:textSize="10sp" />
+
+        <Button
+            android:id="@+id/skorbtn"
+            android:layout_width="25dp"
+            android:layout_height="75dp"
+            android:layout_weight="1"
+            android:background="@drawable/imagesfirstplace" />
+
+        <TextView
+            android:id="@+id/skortext"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="@color/fui_bgAnonymous"
+            android:textSize="35sp" />
+
+    </LinearLayout>
+
     <Button
         android:id="@+id/btn_sign_out"
         android:layout_width="match_parent"

@@ -39,6 +39,7 @@ public class Main2Activity extends AppCompatActivity {
     ArrayList<Sorular> sorular = new ArrayList<>(  );
     Integer sorunumarasi,benimSkor,onunSkor;
     int cvphak=1;
+    Integer skorun = 0;
     Integer benimCevap, onunCevabi;
     ArrayList<Mesajlar> gelenmsj= new ArrayList<>(  );
     Mesajlar messajlar = new Mesajlar("","");
@@ -62,7 +63,10 @@ public class Main2Activity extends AppCompatActivity {
         Cevap = (EditText)findViewById( R.id.Cevap );
         Cevabi_Gonder = (Button)findViewById( R.id.Cevabı_Gonder );
         Anasayfaya_git = (Button)findViewById( R.id.anasayfa );
-        kullaniciuid = MainActivity.kullanicilar.getUid();
+
+
+
+       // kullaniciuid = MainActivity.kullanicilar.getUid(); // ALAMIYOR AYARLA
 
         Cevabi_Gonder.setOnClickListener( new View.OnClickListener() {
             @Override
@@ -77,10 +81,12 @@ public class Main2Activity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent anasayfagit = new Intent( Main2Activity.this,MainActivity.class );
+                anasayfagit.putExtra( "seninskorun",(Integer) benimSkor);
                 startActivity( anasayfagit );
             }
         } );
 
+        kullaniciuidal();
         odauidal();
         sorularial();
         mesajoku();
@@ -93,6 +99,11 @@ public class Main2Activity extends AppCompatActivity {
         } );
 
 
+    }
+
+    private void kullaniciuidal(){
+        Intent intent = getIntent();
+        kullaniciuid = intent.getStringExtra("kullaniciuid");
     }
 
     private void mesajoku(){
@@ -134,6 +145,7 @@ public class Main2Activity extends AppCompatActivity {
             int kcevap = Integer.parseInt( Cevap.getText().toString() );
             databaseReference.child( "Odalar" ).child( odauid ).child( "cevaplar" ).child( sorunumarasi.toString() ).child( kullaniciuid ).setValue( kcevap );
             soruyubekle();
+            Cevap.getText().clear();
         }
     }
 
@@ -272,7 +284,28 @@ public class Main2Activity extends AppCompatActivity {
         Cevap.setVisibility( View.INVISIBLE );
         Cevabi_Gonder.setVisibility( View.INVISIBLE );
         sorumetni.setText( "Senin Skorun" + benimSkor +"\n"+" Onun Skoru" + onunSkor );
+        skorlariyaz();
 
+    }
+
+    private void skorlariyaz(){
+        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                for (DataSnapshot skorsnap:dataSnapshot.getChildren()){
+                    skorun = ( Integer ) skorsnap.child( "Skorlar" ).getValue();
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+
+        skorun = skorun+benimSkor;
+
+        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Skorlar" ).setValue( skorun );
     }
 
     private void zamanibaslat(final Integer index){
