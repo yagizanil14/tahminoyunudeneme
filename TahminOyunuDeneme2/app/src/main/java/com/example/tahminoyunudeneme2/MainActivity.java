@@ -4,10 +4,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -29,14 +27,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.UUID;
 
@@ -45,12 +39,12 @@ public class MainActivity extends AppCompatActivity {
     private static final int MY_REQUEST_CODE = 1000 ;
     Button btn_sign_out;
     List<AuthUI.IdpConfig> providers;
-    Button OyunaBasla,skrtblbtn;
+    Button OyunaBasla,skrtblbtn,marketegit;
     FirebaseDatabase database;
     DatabaseReference databaseReference;
-    TextView textskor,textseninskor;
+    TextView textskor,textseninskor,AltinText;
     public static Kullanicilar kullanicilar;
-     ArrayList<String> odakullanicilari;
+     ArrayList<String> odakullanicilari,kullaniciadi;
      ArrayList<Kullanicilar> skorlarary;
    public Odalar odalar;
      ArrayList<Sorular> sorularList,sorularlist2;
@@ -58,11 +52,11 @@ public class MainActivity extends AppCompatActivity {
     Sorular sorular;
     String sorumetni,kullaniciuid;
     Integer sorucevap1;
-    Integer skorun = 0,index;
+    Integer skorun =0,index,Altin;
     Cevaplar cevaplar;
     HashMap<Integer,Sorular> hashsorular;
     Random randomsayi;
-    ArrayList<Integer> rndsayilar;
+    ArrayList<Integer> rndsayilar, listskorlar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +68,6 @@ public class MainActivity extends AppCompatActivity {
         databaseReference = database.getReference();
         FirebaseApp.initializeApp( this );
 
-
-
         skorlarary = new ArrayList<>(  );
         odakullanicilari = new ArrayList<String>();
         cevaplar = new Cevaplar();
@@ -83,12 +75,15 @@ public class MainActivity extends AppCompatActivity {
         index = 0;
 
 
+        kullaniciadi = new ArrayList<>(  );
 
         skrtblbtn = (Button) findViewById( R.id.skorbtn );
-        textskor = (TextView) findViewById( R.id.textskortbl );
+       // textskor = (TextView) findViewById( R.id.textskortbl );
         textseninskor = (TextView) findViewById( R.id.skortext );
         btn_sign_out = findViewById( R.id.btn_sign_out );
         OyunaBasla = (Button)findViewById( R.id.OyunaBasla );
+        marketegit = (Button)findViewById( R.id.AnasayfaGit );
+        AltinText = (TextView)findViewById( R.id.AltinText );
         hashsorular = new HashMap<>(  );
 
         btn_sign_out.setOnClickListener( new View.OnClickListener() {
@@ -120,7 +115,6 @@ public class MainActivity extends AppCompatActivity {
         showSignInOptions();
     }
 
-
     private void showSignInOptions() {
         startActivityForResult( AuthUI.getInstance(  ).createSignInIntentBuilder()
         .setAvailableProviders( providers ).setTheme( R.style.MyTheme ).build(),MY_REQUEST_CODE);
@@ -135,21 +129,32 @@ public class MainActivity extends AppCompatActivity {
                 //GET USER
                  FirebaseUser user = FirebaseAuth.getInstance(  ).getCurrentUser();
 
-
                 //SHOW EMAİL İN TOAST
                 Toast.makeText( this, ""+ user.getEmail(), Toast.LENGTH_SHORT ).show();
 
-                kullanicilar = new Kullanicilar( user.getUid(),user.getDisplayName(),null );
+                kullanicilar = new Kullanicilar( user.getUid(),kullaniciadi,null );
+                String useradi = user.getDisplayName();
                 kullaniciuid= user.getUid();
 
-                databaseReference.child( "Kullanicilar" ).child( kullanicilar.getUid() ).child( "KullaniciAdi" ).setValue( kullanicilar.getKullaniciAdi() );
+                Altinekleyaz();
+
+                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "KullaniciAdi" ).setValue( useradi );
 
                 toplamskor();
-                skortbl();
-
+               // skortbl();
 
                 //SET BUTTON SİGN OUT
                 btn_sign_out.setEnabled( true );
+
+                //Markete Git Butonu
+                marketegit.setOnClickListener( new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent intent = new Intent( MainActivity.this,MarketActivity.class );
+                        intent.putExtra( "kullaniciuid", kullaniciuid );
+                        startActivity( intent );
+                    }
+                } );
 
                 //OYUNA BAŞLA
                 OyunaBasla.setOnClickListener( new View.OnClickListener() {
@@ -209,13 +214,20 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void toplamskor(){
-        databaseReference.child( "Kullanicilar" ).child( kullanicilar.getUid() ).addListenerForSingleValueEvent( new ValueEventListener() {
+    private void Altinekleyaz(){
+        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot skorsnap:dataSnapshot.getChildren()){
-                    skorun = ( Integer ) skorsnap.child( "Skorlar" ).getValue();
-
+                if(dataSnapshot.getChildrenCount()!=0){
+                   if (dataSnapshot.getChildrenCount()!=0){
+                        Altin = dataSnapshot.child( "Altin" ).getValue(Integer.class);
+                        String Altinstr = String.valueOf( Altin );
+                        Log.e( "Altınsnap", Altinstr );
+                        AltinText.setText( Altinstr );
+                    }
+                }else {
+                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).setValue( 500 );
+                    AltinText.setText( "500" );
                 }
             }
 
@@ -224,38 +236,69 @@ public class MainActivity extends AppCompatActivity {
 
             }
         } );
-       // databaseReference.child( "Kullanicilar" ).child( kullanicilar.getUid() ).child( "Skorlar" ).setValue( skorun );
 
-        String strskor = String.valueOf( skorun );
+    }
 
-        textseninskor.setText( strskor );
+    private void toplamskor(){
+        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Skorlar" ).addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                if (dataSnapshot.getChildrenCount()!=0){
+                    skorun = dataSnapshot.getValue(Integer.class);
+                    String strskor = String.valueOf( skorun );
+                    Log.e( "Skorun",strskor );
+                    textseninskor.setText( strskor );
+
+                }else {
+                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Skorlar" ).setValue( 0 );
+                    textseninskor.setText( "0" );
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+       // databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Skorlar" ).setValue( skorun );
+
+
 
     }
 
     private void skortbl(){
+        listskorlar = new ArrayList<>(  );
+        kullanicilar = new Kullanicilar( kullaniciuid,kullaniciadi,listskorlar );
         databaseReference.child( "Kullanicilar" ).addValueEventListener( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
             for (DataSnapshot skorlarsnap:dataSnapshot.getChildren()){
+
                 int skrtint = 0;
-                String skrtbl = String.valueOf( skorlarsnap.child( "Skorlar" ).getValue() );
+                Integer skrtbl = (Integer) skorlarsnap.child( "Skorlar" ).getValue(Integer.class);
                 String kllaniciadi = String.valueOf(skorlarsnap.child( "KullaniciAdi" ).getValue());
 
-                kullanicilar = new Kullanicilar( kullaniciuid,kllaniciadi,skrtbl );
+                kullanicilar = new Kullanicilar( kullaniciuid,kullaniciadi,listskorlar );
 
-                skorlarary.add( kullanicilar );
+                kullanicilar.getKullaniciAdi().add( skrtint,kllaniciadi );
+                kullanicilar.getSkor().add( skrtint,skrtbl );
 
-               // skorlarary.get( skrtint ).setKullaniciAdi(  );
-               // skorlarary.get( skrtint ).setSkor( skrtbl );
+              // skorlarary.add( kullanicilar );
 
-                Log.e( "Skorlarary", skrtbl );
-                Log.e( "Kullaniciadi", kllaniciadi );
                 skrtint ++;
+                Log.e( "Kullaniciadi", kllaniciadi );
+
             }
 
+           // for (int a = 0; a == skorlarary.size(); a++){
+                //int skrtint = 0;
+              //
+               // skrtint ++;
+           // }
 
-                Collections.reverse( skorlarary );
-            textskor.setText("Skorlar:"+ "\n" +skorlarary.get( 0 ).getKullaniciAdi()+":"+skorlarary.get( 0 ).getSkor()+ "\n"+skorlarary.get( 1 ).getKullaniciAdi()+":"+skorlarary.get( 1 ).getSkor()+ "\n" );
+
+            textskor.setText("Skorlar:"+ "\n" +kullanicilar.getKullaniciAdi().get( 0 )+":"+kullanicilar.getSkor().get( 0 )+ "\n"+kullanicilar.getKullaniciAdi().get( 1 )+":"+kullanicilar.getSkor().get( 1 )+ "\n" );
             }
 
            // + skorlarary.get( 1 )+ "\n"+ skorlarary.get( 2 )+ "\n"+ skorlarary.get( 3 )

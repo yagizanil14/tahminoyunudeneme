@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/maraba6"
     android:orientation="vertical"
     tools:context=".Main2Activity">
 
@@ -24,6 +25,7 @@
         android:id="@+id/SoruMetni"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#6B000000"
         android:textSize="20sp"
         tools:layout_editor_absoluteY="96dp" />
 
@@ -36,6 +38,7 @@
             android:id="@+id/Cevap"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:background="#6B000000"
             android:ems="10"
             android:hint="Cevabı Giriniz"
             android:inputType="number"
@@ -55,6 +58,7 @@
         android:id="@+id/mesajbox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#6B000000"
         android:text="konuşmalar"
         android:textSize="20dp"
         android:visibility="visible"
@@ -71,6 +75,7 @@
             android:id="@+id/edtmsj"
             android:layout_width="250dp"
             android:layout_height="wrap_content"
+            android:background="#6B000000"
             android:ems="10"
             android:hint="Mesajınız"
             android:inputType="textPersonName"
@@ -87,7 +92,6 @@
             tools:layout_editor_absoluteX="230dp"
             tools:layout_editor_absoluteY="584dp" />
     </LinearLayout>
-
 
 
     <Button

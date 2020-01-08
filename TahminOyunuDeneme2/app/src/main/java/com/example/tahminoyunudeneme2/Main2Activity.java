@@ -292,11 +292,9 @@ public class Main2Activity extends AppCompatActivity {
         databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Skorlar" ).addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot skorsnap:dataSnapshot.getChildren()){
-                  //  String strskor = skorsnap.child( "Skorlar" ).getValue().toString();
-                   // Log.e( "Skorun",strskor );
-                    skorun = Integer.parseInt( skorsnap.getValue().toString() );
-                }
+
+                skorun = dataSnapshot.getValue(Integer.class);
+
             }
 
             @Override

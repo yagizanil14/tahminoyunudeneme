@@ -1,13 +1,16 @@
 package com.example.tahminoyunudeneme2;
 
-public class Kullanicilar {
-    private String Uid,KullaniciAdi,skor;
+import java.util.List;
 
+public class Kullanicilar {
+    private String Uid;
+    private List<Integer> skor;
+    private List<String> KullaniciAdi;
 
     public Kullanicilar() {
     }
 
-    public Kullanicilar(String uid, String kullaniciAdi, String skor) {
+    public Kullanicilar(String uid, List<String> kullaniciAdi, List<Integer>  skor) {
         Uid = uid;
         KullaniciAdi = kullaniciAdi;
         this.skor = skor;
@@ -21,19 +24,19 @@ public class Kullanicilar {
         Uid = uid;
     }
 
-    public String getKullaniciAdi() {
+    public List<String> getKullaniciAdi() {
         return KullaniciAdi;
     }
 
-    public void setKullaniciAdi(String kullaniciAdi) {
+    public void setKullaniciAdi(List<String> kullaniciAdi) {
         KullaniciAdi = kullaniciAdi;
     }
 
-    public String getSkor() {
+    public List<Integer>  getSkor() {
         return skor;
     }
 
-    public void setSkor(String skor) {
+    public void setSkor(List<Integer>  skor) {
         this.skor = skor;
     }
 }
