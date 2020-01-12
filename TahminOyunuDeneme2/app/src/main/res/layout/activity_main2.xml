@@ -26,7 +26,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#6B000000"
-        android:textSize="20sp"
+        android:textColor="@color/fui_bgAnonymous"
+        android:textSize="25sp"
         tools:layout_editor_absoluteY="96dp" />
 
     <LinearLayout
@@ -42,6 +43,8 @@
             android:ems="10"
             android:hint="Cevabı Giriniz"
             android:inputType="number"
+            android:textColor="@color/fui_bgAnonymous"
+            android:textSize="25sp"
             tools:layout_editor_absoluteX="11dp"
             tools:layout_editor_absoluteY="309dp" />
 
@@ -60,7 +63,8 @@
         android:layout_height="wrap_content"
         android:background="#6B000000"
         android:text="konuşmalar"
-        android:textSize="20dp"
+        android:textColor="@color/fui_bgAnonymous"
+        android:textSize="25sp"
         android:visibility="visible"
         tools:layout_editor_absoluteX="80dp"
         tools:layout_editor_absoluteY="414dp" />
@@ -79,6 +83,8 @@
             android:ems="10"
             android:hint="Mesajınız"
             android:inputType="textPersonName"
+            android:textColor="@color/fui_bgAnonymous"
+            android:textSize="25sp"
             android:visibility="visible"
             tools:layout_editor_absoluteX="80dp"
             tools:layout_editor_absoluteY="584dp" />
