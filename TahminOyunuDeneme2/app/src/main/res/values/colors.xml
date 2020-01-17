@@ -4,4 +4,6 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="btnColor">#9960E266</color>
+    <color name="falsesatinal">#6F6F77</color>
+    <color name="falsesatinx">#000000</color>
 </resources>

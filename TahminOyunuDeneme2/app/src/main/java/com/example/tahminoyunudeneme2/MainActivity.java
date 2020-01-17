@@ -136,10 +136,11 @@ public class MainActivity extends AppCompatActivity {
                 String useradi = user.getDisplayName();
                 kullaniciuid= user.getUid();
 
-                Altinekleyaz();
+
 
                 databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "KullaniciAdi" ).setValue( useradi );
 
+                Altinekleyaz();
                 toplamskor();
                // skortbl();
 
@@ -215,16 +216,15 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void Altinekleyaz(){
-        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).addListenerForSingleValueEvent( new ValueEventListener() {
+        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.getChildrenCount()!=0){
-                   if (dataSnapshot.getChildrenCount()!=0){
-                        Altin = dataSnapshot.child( "Altin" ).getValue(Integer.class);
+                if(dataSnapshot.getValue()!= null){
+                        Altin = dataSnapshot.getValue(Integer.class);
                         String Altinstr = String.valueOf( Altin );
                         Log.e( "Altınsnap", Altinstr );
                         AltinText.setText( Altinstr );
-                    }
+
                 }else {
                     databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).setValue( 500 );
                     AltinText.setText( "500" );
@@ -240,11 +240,10 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void toplamskor(){
-        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Skorlar" ).addValueEventListener( new ValueEventListener() {
+        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Skorlar" ).addListenerForSingleValueEvent( new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-
-                if (dataSnapshot.getChildrenCount()!=0){
+                if (dataSnapshot.getValue()!= null){
                     skorun = dataSnapshot.getValue(Integer.class);
                     String strskor = String.valueOf( skorun );
                     Log.e( "Skorun",strskor );
