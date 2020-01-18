@@ -37,7 +37,7 @@ public class Main2Activity extends AppCompatActivity {
     boolean yenisorugectf, oyunBasladi;
     String odauid,kullaniciuid;
     ArrayList<Sorular> sorular = new ArrayList<>(  );
-    Integer sorunumarasi,benimSkor,onunSkor;
+    Integer sorunumarasi,benimSkor,onunSkor,altin;
     int cvphak=1;
     Integer skorun = 0;
     Integer benimCevap, onunCevabi;
@@ -285,6 +285,7 @@ public class Main2Activity extends AppCompatActivity {
         Cevabi_Gonder.setVisibility( View.INVISIBLE );
         sorumetni.setText( "Senin Skorun" + benimSkor +"\n"+" Onun Skoru" + onunSkor );
         skorlariyaz();
+        altinekle();
 
     }
 
@@ -306,6 +307,26 @@ public class Main2Activity extends AppCompatActivity {
         skorun = skorun+benimSkor;
 
         databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Skorlar" ).setValue( skorun );
+    }
+
+    private void altinekle(){
+        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                altin = dataSnapshot.getValue(Integer.class);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        } );
+
+        altin = altin+ (benimSkor*10);
+
+        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).setValue( altin );
     }
 
     private void zamanibaslat(final Integer index){

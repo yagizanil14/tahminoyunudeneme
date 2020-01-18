@@ -39,7 +39,7 @@
             android:orientation="horizontal">
 
             <Button
-                android:id="@+id/altın"
+                android:id="@+id/altinsatinal"
                 android:layout_width="40dip"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -54,8 +54,7 @@
                 android:textAlignment="center"
                 android:textColor="@color/fui_bgAnonymous"
                 android:textSize="30sp"
-                android:textStyle="bold|italic"
-                tools:text="500" />
+                android:textStyle="bold|italic" />
         </LinearLayout>
 
         <LinearLayout

@@ -66,7 +66,7 @@
             android:paddingLeft="25dp">
 
             <Button
-                android:id="@+id/altın"
+                android:id="@+id/altinsatinal"
                 android:layout_width="70dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -113,9 +113,7 @@
                         android:id="@+id/imageana"
                         android:layout_width="250dp"
                         android:layout_height="250dp"
-                        android:layout_gravity="center"
-                        app:srcCompat="@drawable/gozde"
-                        tools:srcCompat="@drawable/gozde" />
+                        android:layout_gravity="center" />
 
                     <TextView
                         android:id="@+id/tvkarakterad"
@@ -178,6 +176,7 @@
         </LinearLayout>
 
         <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/conslyt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="#B4023104"
@@ -189,36 +188,28 @@
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 app:layout_constraintTop_toBottomOf="@+id/image1"
-                app:srcCompat="@drawable/maraba7"
-                tools:layout_editor_absoluteX="0dp"
-                tools:srcCompat="@tools:sample/avatars[0]" />
+                tools:layout_editor_absoluteX="0dp" />
 
             <ImageView
                 android:id="@+id/image5"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 app:layout_constraintTop_toBottomOf="@+id/image4"
-                app:srcCompat="@drawable/maraba7"
-                tools:layout_editor_absoluteX="-16dp"
-                tools:srcCompat="@tools:sample/avatars[1]" />
+                tools:layout_editor_absoluteX="-16dp" />
 
             <ImageView
                 android:id="@+id/image4"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 app:layout_constraintTop_toBottomOf="@+id/image3"
-                app:srcCompat="@drawable/maraba7"
-                tools:layout_editor_absoluteX="-16dp"
-                tools:srcCompat="@tools:sample/avatars[2]" />
+                tools:layout_editor_absoluteX="-16dp" />
 
             <ImageView
                 android:id="@+id/image3"
                 android:layout_width="match_parent"
                 android:layout_height="80dp"
                 app:layout_constraintTop_toBottomOf="@+id/image2"
-                app:srcCompat="@drawable/maraba7"
-                tools:layout_editor_absoluteX="16dp"
-                tools:srcCompat="@tools:sample/avatars[3]" />
+                tools:layout_editor_absoluteX="16dp" />
 
             <ImageView
                 android:id="@+id/image1"
@@ -226,7 +217,6 @@
                 android:layout_height="80dp"
                 android:layout_marginTop="50dp"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/maraba7"
                 tools:layout_editor_absoluteX="0dp" />
 
             <androidx.constraintlayout.widget.Guideline

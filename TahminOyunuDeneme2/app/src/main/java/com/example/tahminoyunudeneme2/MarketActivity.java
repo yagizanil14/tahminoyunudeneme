@@ -2,6 +2,7 @@ package com.example.tahminoyunudeneme2;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -23,11 +24,12 @@ public class MarketActivity extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference databaseReference;
-    Button AnasayfaGec,satinal,karakterler,stadyumlar;
+    Button AnasayfaGec,satinal,karakterler,stadyumlar,altinsatinal;
     String kullaniciuid;
     Integer Altin, karakter1,karakter2,karakter3,karakter4,karakter5,stadyum1,stadyum2,stadyum3,stadyum4,stadyum5,kullanimda,kullanimdastd;
     TextView AltinText,FiyatAltin,karakterad;
     ImageView imageana,image1,image2,image3,image4,image5;
+    ConstraintLayout conslyt;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +48,7 @@ public class MarketActivity extends AppCompatActivity {
         satinal = (Button)findViewById( R.id.satinal );
         karakterler = (Button)findViewById( R.id.Karakterler );
         stadyumlar = (Button)findViewById( R.id.stadyumlar );
+        altinsatinal = (Button)findViewById( R.id.altinsatinal ) ;
 
         imageana = (ImageView)findViewById( R.id.imageana );
         image1 = (ImageView)findViewById( R.id.image1 );
@@ -53,6 +56,8 @@ public class MarketActivity extends AppCompatActivity {
         image3 = (ImageView)findViewById( R.id.image3 );
         image4 = (ImageView)findViewById( R.id.image4 );
         image5 = (ImageView)findViewById( R.id.image5 );
+
+        conslyt = (ConstraintLayout)findViewById( R.id.conslyt );
 
         kullanimda = 0;
         kullanimdastd = 0;
@@ -83,6 +88,13 @@ public class MarketActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 karakterler();
+            }
+        } );
+
+        altinsatinal.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                altinsatinal();
             }
         } );
 
@@ -208,15 +220,10 @@ public class MarketActivity extends AppCompatActivity {
 
                             if (karakter1 != null && kullanimda != 1){
 
-                                satinal.setOnClickListener( new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        satinal.setText( "Kullanımda" );
-                                        satinal.setBackgroundResource( R.drawable.false_satinal );
-                                        satinal.setTextColor( Color.BLACK );
-                                        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 1 );
-                                    }
-                                } );
+                                satinal.setText( "Kullanımda" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 1 );
 
                             }
 
@@ -303,15 +310,10 @@ public class MarketActivity extends AppCompatActivity {
 
                             if (karakter2 != null && kullanimda != 2){
 
-                                satinal.setOnClickListener( new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        satinal.setText( "Kullanımda" );
-                                        satinal.setBackgroundResource( R.drawable.false_satinal );
-                                        satinal.setTextColor( Color.BLACK );
-                                        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 2 );
-                                    }
-                                } );
+                                satinal.setText( "Kullanımda" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 2 );
 
                             }
 
@@ -398,15 +400,10 @@ public class MarketActivity extends AppCompatActivity {
                             }
 
                             if (karakter3 != null && kullanimda != 3) {
-                                satinal.setOnClickListener( new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        satinal.setText( "Kullanımda" );
-                                        satinal.setBackgroundResource( R.drawable.false_satinal );
-                                        satinal.setTextColor( Color.BLACK );
-                                        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 3 );
-                                    }
-                                } );
+                                satinal.setText( "Kullanımda" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 3 );
                             }
 
                         }
@@ -492,15 +489,10 @@ public class MarketActivity extends AppCompatActivity {
                             }
 
                             if (karakter4 != null && kullanimda != 4) {
-                                satinal.setOnClickListener( new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        satinal.setText( "Kullanımda" );
-                                        satinal.setBackgroundResource( R.drawable.false_satinal );
-                                        satinal.setTextColor( Color.BLACK );
-                                        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 4 );
-                                    }
-                                } );
+                                satinal.setText( "Kullanımda" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 4 );
                             }
 
                         }
@@ -692,16 +684,10 @@ public class MarketActivity extends AppCompatActivity {
 
                         if (stadyum1 != null && kullanimdastd != 1){
 
-                            satinal.setOnClickListener( new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    satinal.setText( "Kullanımda" );
-                                    satinal.setBackgroundResource( R.drawable.false_satinal );
-                                    satinal.setTextColor( Color.BLACK );
-                                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 1 );
-                                }
-                            } );
-
+                            satinal.setText( "Kullanımda" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 1 );
                         }
                     }
                 } );
@@ -787,16 +773,10 @@ public class MarketActivity extends AppCompatActivity {
 
                         if (stadyum2 != null && kullanimdastd != 2){
 
-                            satinal.setOnClickListener( new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    satinal.setText( "Kullanımda" );
-                                    satinal.setBackgroundResource( R.drawable.false_satinal );
-                                    satinal.setTextColor( Color.BLACK );
-                                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 2 );
-                                }
-                            } );
-
+                            satinal.setText( "Kullanımda" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 2 );
                         }
                     }
                 } );
@@ -882,15 +862,10 @@ public class MarketActivity extends AppCompatActivity {
 
                         if (stadyum3 != null && kullanimdastd != 3){
 
-                            satinal.setOnClickListener( new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    satinal.setText( "Kullanımda" );
-                                    satinal.setBackgroundResource( R.drawable.false_satinal );
-                                    satinal.setTextColor( Color.BLACK );
-                                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 3 );
-                                }
-                            } );
+                            satinal.setText( "Kullanımda" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 3 );
 
                         }
                     }
@@ -976,16 +951,10 @@ public class MarketActivity extends AppCompatActivity {
 
                         if (stadyum4 != null && kullanimdastd != 4){
 
-                            satinal.setOnClickListener( new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    satinal.setText( "Kullanımda" );
-                                    satinal.setBackgroundResource( R.drawable.false_satinal );
-                                    satinal.setTextColor( Color.BLACK );
-                                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 4 );
-                                }
-                            } );
-
+                            satinal.setText( "Kullanımda" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 4 );
                         }
                     }
                 } );
@@ -1070,15 +1039,10 @@ public class MarketActivity extends AppCompatActivity {
 
                         if (stadyum5 != null && kullanimdastd != 5) {
 
-                            satinal.setOnClickListener( new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    satinal.setText( "Kullanımda" );
-                                    satinal.setBackgroundResource( R.drawable.false_satinal );
-                                    satinal.setTextColor( Color.BLACK );
-                                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 5 );
-                                }
-                            } );
+                            satinal.setText( "Kullanımda" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 5 );
                         }
                     }
                 } );
@@ -1086,6 +1050,88 @@ public class MarketActivity extends AppCompatActivity {
 
             }
         } );
+
+    }
+
+    private void altinsatinal(){
+        imageana.setImageResource( R.drawable.maraba5 );
+        image2.setImageResource( R.drawable.maraba5 );
+        image3.setImageResource( R.drawable.maraba5 );
+        image4.setImageResource( R.drawable.maraba5 );
+        image5.setImageResource( R.drawable.maraba5 );
+        image1.setImageResource( R.drawable.maraba5 );
+        karakterad.setText( "ALTIN SATIN AL" );
+        FiyatAltin.setText( "" );
+        satinal.setText( "Satın Al" );
+        satinal.setBackgroundResource( R.drawable.rounded_button );
+        satinal.setTextColor( Color.YELLOW );
+
+
+        image1.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                imageana.setImageResource( R.drawable.maraba5 );
+
+                karakterad.setText( "2000 ALTIN" );
+
+                FiyatAltin.setText( "20₺" );
+
+            }
+        } );
+
+        image2.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                imageana.setImageResource( R.drawable.maraba5 );
+
+                karakterad.setText( "5000 ALTIN" );
+
+                FiyatAltin.setText( "40₺" );
+
+            }
+        } );
+
+        image3.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                imageana.setImageResource( R.drawable.maraba5 );
+
+                karakterad.setText( "10 000 ALTIN" );
+
+                FiyatAltin.setText( "60₺" );
+
+            }
+        } );
+
+        image4.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                imageana.setImageResource( R.drawable.maraba5 );
+
+                karakterad.setText( "50 000 ALTIN" );
+
+                FiyatAltin.setText( "350₺" );
+
+            }
+        } );
+
+        image5.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                imageana.setImageResource( R.drawable.maraba5 );
+
+                karakterad.setText( "100 000 ALTIN" );
+
+                FiyatAltin.setText( "500₺" );
+
+            }
+        } );
+
 
     }
 }
