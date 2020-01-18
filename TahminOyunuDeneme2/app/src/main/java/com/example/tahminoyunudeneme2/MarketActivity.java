@@ -25,7 +25,7 @@ public class MarketActivity extends AppCompatActivity {
     DatabaseReference databaseReference;
     Button AnasayfaGec,satinal,karakterler,stadyumlar;
     String kullaniciuid;
-    Integer Altin, karakter1,karakter2,karakter3,karakter4,karakter5,stadyum1,stadyum2,stadyum3,stadyum4,stadyum5;
+    Integer Altin, karakter1,karakter2,karakter3,karakter4,karakter5,stadyum1,stadyum2,stadyum3,stadyum4,stadyum5,kullanimda,kullanimdastd;
     TextView AltinText,FiyatAltin,karakterad;
     ImageView imageana,image1,image2,image3,image4,image5;
 
@@ -53,6 +53,9 @@ public class MarketActivity extends AppCompatActivity {
         image3 = (ImageView)findViewById( R.id.image3 );
         image4 = (ImageView)findViewById( R.id.image4 );
         image5 = (ImageView)findViewById( R.id.image5 );
+
+        kullanimda = 0;
+        kullanimdastd = 0;
 
 
         AnasayfaGec.setOnClickListener( new View.OnClickListener() {
@@ -146,8 +149,38 @@ public class MarketActivity extends AppCompatActivity {
                                 satinal.setText( "Mevcut" );
                                 satinal.setBackgroundResource( R.drawable.false_satinal );
                                 satinal.setTextColor( Color.BLACK );
-
                             }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    } );
+
+
+                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).addListenerForSingleValueEvent( new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            kullanimda =  dataSnapshot.getValue(Integer.class);
+
+//                            Log.e( "kullanımda", kullanimda.toString() );
+
+                            if (kullanimda == null || kullanimda == 0 )  {
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 0 );
+                            }
+
+                            if (kullanimda == 1){
+                                satinal.setText( "Kullanimda" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                            }else if (karakter1 != null){
+                                satinal.setText( "Bunu Kullan" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                            }
+
                         }
 
                         @Override
@@ -162,15 +195,31 @@ public class MarketActivity extends AppCompatActivity {
 
                             if (Altin > 1500 && karakter1 == null) {
                                 Altin = Altin - 1500;
-                                satinal.setText( "Mevcut" );
+                                satinal.setText( "Kullanımda" );
                                 satinal.setBackgroundResource( R.drawable.false_satinal );
                                 satinal.setTextColor( Color.BLACK );
                                 databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).setValue( Altin );
                                 databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Karakterler" ).child( "Karakter1" ).setValue( 1 );
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 1 );
                             } else if (Altin < 1500 && karakter1 == null) {
                                 satinal.setBackgroundResource( R.drawable.false_satinal );
                                 satinal.setTextColor( Color.BLACK );
                             }
+
+                            if (karakter1 != null && kullanimda != 1){
+
+                                satinal.setOnClickListener( new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        satinal.setText( "Kullanımda" );
+                                        satinal.setBackgroundResource( R.drawable.false_satinal );
+                                        satinal.setTextColor( Color.BLACK );
+                                        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 1 );
+                                    }
+                                } );
+
+                            }
+
                         }
                     } );
 
@@ -208,6 +257,32 @@ public class MarketActivity extends AppCompatActivity {
                         }
                     } );
 
+                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).addListenerForSingleValueEvent( new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            kullanimda =  dataSnapshot.getValue(Integer.class);
+
+                            if (kullanimda == null || kullanimda == 0 )  {
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 0 );
+                            }
+                            if (kullanimda == 2){
+                                satinal.setText( "Kullanimda" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                            }else if (karakter2 != null){
+                                satinal.setText( "Bunu Kullan" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    } );
+
 
                     satinal.setOnClickListener( new View.OnClickListener() {
                         @Override
@@ -215,17 +290,31 @@ public class MarketActivity extends AppCompatActivity {
 
                             if (Altin > 3000 && karakter2 == null) {
                                 Altin = Altin - 3000;
-                                satinal.setText( "Mevcut" );
+                                satinal.setText( "Kullanımda" );
                                 satinal.setBackgroundResource( R.drawable.false_satinal );
                                 satinal.setTextColor( Color.BLACK );
                                 databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).setValue( Altin );
                                 databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Karakterler" ).child( "Karakter2" ).setValue( 1 );
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 2 );
                             } else if (Altin < 3000 && karakter2 == null) {
                                 satinal.setBackgroundResource( R.drawable.false_satinal );
                                 satinal.setTextColor( Color.BLACK );
-                            } else if (karakter2 == 1) {
-                                satinal.setText( "Sahipsiniz" );
                             }
+
+                            if (karakter2 != null && kullanimda != 2){
+
+                                satinal.setOnClickListener( new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        satinal.setText( "Kullanımda" );
+                                        satinal.setBackgroundResource( R.drawable.false_satinal );
+                                        satinal.setTextColor( Color.BLACK );
+                                        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 2 );
+                                    }
+                                } );
+
+                            }
+
                         }
                     } );
 
@@ -263,6 +352,34 @@ public class MarketActivity extends AppCompatActivity {
                         }
                     } );
 
+                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).addListenerForSingleValueEvent( new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            kullanimda =  dataSnapshot.getValue(Integer.class);
+
+                            if (kullanimda == null || kullanimda == 0 )  {
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 0 );
+                            }
+
+                            if (kullanimda == 3){
+                                satinal.setText( "Kullanimda" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                            }else if ( karakter3 != null) {
+                                satinal.setText( "Bunu Kullan" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    } );
+
                     satinal.setOnClickListener( new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -274,12 +391,24 @@ public class MarketActivity extends AppCompatActivity {
                                 satinal.setTextColor( Color.BLACK );
                                 databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).setValue( Altin );
                                 databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Karakterler" ).child( "Karakter3" ).setValue( 1 );
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 3 );
                             } else if (Altin < 5000 && karakter3 == null) {
                                 satinal.setBackgroundResource( R.drawable.false_satinal );
                                 satinal.setTextColor( Color.BLACK );
-                            } else if (karakter3 == 1) {
-                                satinal.setText( "Sahipsiniz" );
                             }
+
+                            if (karakter3 != null && kullanimda != 3) {
+                                satinal.setOnClickListener( new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        satinal.setText( "Kullanımda" );
+                                        satinal.setBackgroundResource( R.drawable.false_satinal );
+                                        satinal.setTextColor( Color.BLACK );
+                                        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 3 );
+                                    }
+                                } );
+                            }
+
                         }
                     } );
 
@@ -317,6 +446,34 @@ public class MarketActivity extends AppCompatActivity {
                         }
                     } );
 
+                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).addListenerForSingleValueEvent( new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            kullanimda =  dataSnapshot.getValue(Integer.class);
+
+                            if (kullanimda == null || kullanimda == 0 )  {
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 0 );
+                            }
+
+                            if (kullanimda == 4){
+                                satinal.setText( "Kullanimda" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                            }else if (karakter4 != null){
+                                satinal.setText( "Bunu Kullan" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    } );
+
                     satinal.setOnClickListener( new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -328,12 +485,24 @@ public class MarketActivity extends AppCompatActivity {
                                 satinal.setTextColor( Color.BLACK );
                                 databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).setValue( Altin );
                                 databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Karakterler" ).child( "Karakter4" ).setValue( 1 );
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 4 );
                             } else if (Altin < 9000 && karakter4 == null) {
                                 satinal.setBackgroundResource( R.drawable.false_satinal );
                                 satinal.setTextColor( Color.BLACK );
-                            } else if (karakter4 == 1) {
-                                satinal.setText( "Sahipsiniz" );
                             }
+
+                            if (karakter4 != null && kullanimda != 4) {
+                                satinal.setOnClickListener( new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(View v) {
+                                        satinal.setText( "Kullanımda" );
+                                        satinal.setBackgroundResource( R.drawable.false_satinal );
+                                        satinal.setTextColor( Color.BLACK );
+                                        databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 4 );
+                                    }
+                                } );
+                            }
+
                         }
                     } );
 
@@ -371,6 +540,34 @@ public class MarketActivity extends AppCompatActivity {
                         }
                     } );
 
+                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).addListenerForSingleValueEvent( new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                            kullanimda =  dataSnapshot.getValue(Integer.class);
+
+                            if (kullanimda == null || kullanimda == 0 )  {
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 0 );
+                            }
+
+                            if (kullanimda == 5){
+                                satinal.setText( "Kullanimda" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                            }else if (karakter5 != null){
+                                satinal.setText( "Bunu Kullan" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                            }
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    } );
+
                     satinal.setOnClickListener( new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -382,12 +579,19 @@ public class MarketActivity extends AppCompatActivity {
                                 satinal.setTextColor( Color.BLACK );
                                 databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).setValue( Altin );
                                 databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Karakterler" ).child( "Karakter5" ).setValue( 1 );
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 5 );
                             } else if (Altin < 15000 && karakter5 == null) {
                                 satinal.setBackgroundResource( R.drawable.false_satinal );
                                 satinal.setTextColor( Color.BLACK );
-                            } else if (karakter5 == 1) {
-                                satinal.setText( "Sahipsiniz" );
                             }
+
+                            if (karakter5 != null && kullanimda != 5) {
+                                satinal.setText( "Kullanımda" );
+                                satinal.setBackgroundResource( R.drawable.false_satinal );
+                                satinal.setTextColor( Color.BLACK );
+                                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimda" ).setValue( 5 );
+                            }
+
                         }
                     } );
 
@@ -441,20 +645,63 @@ public class MarketActivity extends AppCompatActivity {
                     }
                 } );
 
+                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).addListenerForSingleValueEvent( new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        kullanimdastd =  dataSnapshot.getValue(Integer.class);
+
+                        if (kullanimdastd == null || kullanimdastd == 0 )  {
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 0 );
+                        }
+
+                        if (kullanimdastd == 1){
+                            satinal.setText( "Kullanimda" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                        }else if (stadyum1 != null){
+                            satinal.setText( "Bunu Kullan" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                } );
+
                 satinal.setOnClickListener( new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
 
                         if (Altin > 2500 && stadyum1 == null) {
                             Altin = Altin - 2500;
-                            satinal.setText( "Mevcut" );
+                            satinal.setText( "Kullanımda" );
                             satinal.setBackgroundResource( R.drawable.false_satinal );
                             satinal.setTextColor( Color.BLACK );
                             databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).setValue( Altin );
                             databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Stadyumlar" ).child( "Stadyum1" ).setValue( 1 );
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 1 );
                         } else if (Altin < 2500 && stadyum1 == null) {
                             satinal.setBackgroundResource( R.drawable.false_satinal );
                             satinal.setTextColor( Color.BLACK );
+                        }
+
+                        if (stadyum1 != null && kullanimdastd != 1){
+
+                            satinal.setOnClickListener( new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    satinal.setText( "Kullanımda" );
+                                    satinal.setBackgroundResource( R.drawable.false_satinal );
+                                    satinal.setTextColor( Color.BLACK );
+                                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 1 );
+                                }
+                            } );
+
                         }
                     }
                 } );
@@ -493,6 +740,34 @@ public class MarketActivity extends AppCompatActivity {
                     }
                 } );
 
+                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).addListenerForSingleValueEvent( new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        kullanimdastd =  dataSnapshot.getValue(Integer.class);
+
+                        if (kullanimdastd == null || kullanimdastd == 0 )  {
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 0 );
+                        }
+
+                        if (kullanimdastd == 2){
+                            satinal.setText( "Kullanimda" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                        }else if (stadyum2 != null){
+                            satinal.setText( "Bunu Kullan" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                } );
+
                 satinal.setOnClickListener( new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -504,9 +779,24 @@ public class MarketActivity extends AppCompatActivity {
                             satinal.setTextColor( Color.BLACK );
                             databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).setValue( Altin );
                             databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Stadyumlar" ).child( "Stadyum2" ).setValue( 1 );
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 2 );
                         } else if (Altin < 5000 && stadyum2 == null) {
                             satinal.setBackgroundResource( R.drawable.false_satinal );
                             satinal.setTextColor( Color.BLACK );
+                        }
+
+                        if (stadyum2 != null && kullanimdastd != 2){
+
+                            satinal.setOnClickListener( new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    satinal.setText( "Kullanımda" );
+                                    satinal.setBackgroundResource( R.drawable.false_satinal );
+                                    satinal.setTextColor( Color.BLACK );
+                                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 2 );
+                                }
+                            } );
+
                         }
                     }
                 } );
@@ -545,6 +835,34 @@ public class MarketActivity extends AppCompatActivity {
                     }
                 } );
 
+                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).addListenerForSingleValueEvent( new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        kullanimdastd =  dataSnapshot.getValue(Integer.class);
+
+                        if (kullanimdastd == null || kullanimdastd == 0 )  {
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 0 );
+                        }
+
+                        if (kullanimdastd == 3){
+                            satinal.setText( "Kullanimda" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                        }else if (stadyum3 != null){
+                            satinal.setText( "Bunu Kullan" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                } );
+
                 satinal.setOnClickListener( new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -556,9 +874,24 @@ public class MarketActivity extends AppCompatActivity {
                             satinal.setTextColor( Color.BLACK );
                             databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Altin" ).setValue( Altin );
                             databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Stadyumlar" ).child( "Stadyum3" ).setValue( 1 );
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 3 );
                         } else if (Altin < 7500 && stadyum3 == null) {
                             satinal.setBackgroundResource( R.drawable.false_satinal );
                             satinal.setTextColor( Color.BLACK );
+                        }
+
+                        if (stadyum3 != null && kullanimdastd != 3){
+
+                            satinal.setOnClickListener( new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    satinal.setText( "Kullanımda" );
+                                    satinal.setBackgroundResource( R.drawable.false_satinal );
+                                    satinal.setTextColor( Color.BLACK );
+                                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 3 );
+                                }
+                            } );
+
                         }
                     }
                 } );
@@ -597,6 +930,34 @@ public class MarketActivity extends AppCompatActivity {
                     }
                 } );
 
+                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).addListenerForSingleValueEvent( new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        kullanimdastd =  dataSnapshot.getValue(Integer.class);
+
+                        if (kullanimdastd == null || kullanimdastd == 0 )  {
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 0 );
+                        }
+
+                        if (kullanimdastd == 4){
+                            satinal.setText( "Kullanimda" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                        }else if (stadyum4 != null){
+                            satinal.setText( "Bunu Kullan" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                } );
+
                 satinal.setOnClickListener( new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -611,6 +972,20 @@ public class MarketActivity extends AppCompatActivity {
                         } else if (Altin < 10000 && stadyum4 == null) {
                             satinal.setBackgroundResource( R.drawable.false_satinal );
                             satinal.setTextColor( Color.BLACK );
+                        }
+
+                        if (stadyum4 != null && kullanimdastd != 4){
+
+                            satinal.setOnClickListener( new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    satinal.setText( "Kullanımda" );
+                                    satinal.setBackgroundResource( R.drawable.false_satinal );
+                                    satinal.setTextColor( Color.BLACK );
+                                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 4 );
+                                }
+                            } );
+
                         }
                     }
                 } );
@@ -649,6 +1024,34 @@ public class MarketActivity extends AppCompatActivity {
                     }
                 } );
 
+                databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).addListenerForSingleValueEvent( new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+
+                        kullanimdastd =  dataSnapshot.getValue(Integer.class);
+
+                        if (kullanimdastd == null || kullanimdastd == 0 )  {
+                            databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 0 );
+                        }
+
+                        if (kullanimdastd == 5){
+                            satinal.setText( "Kullanimda" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                        }else if (stadyum5 != null){
+                            satinal.setText( "Bunu Kullan" );
+                            satinal.setBackgroundResource( R.drawable.false_satinal );
+                            satinal.setTextColor( Color.BLACK );
+                        }
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                    }
+                } );
+
                 satinal.setOnClickListener( new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -663,6 +1066,19 @@ public class MarketActivity extends AppCompatActivity {
                         } else if (Altin < 25000 && stadyum5 == null) {
                             satinal.setBackgroundResource( R.drawable.false_satinal );
                             satinal.setTextColor( Color.BLACK );
+                        }
+
+                        if (stadyum5 != null && kullanimdastd != 5) {
+
+                            satinal.setOnClickListener( new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    satinal.setText( "Kullanımda" );
+                                    satinal.setBackgroundResource( R.drawable.false_satinal );
+                                    satinal.setTextColor( Color.BLACK );
+                                    databaseReference.child( "Kullanicilar" ).child( kullaniciuid ).child( "Kullanimdastd" ).setValue( 5 );
+                                }
+                            } );
                         }
                     }
                 } );
